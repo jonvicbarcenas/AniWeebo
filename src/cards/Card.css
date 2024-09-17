@@ -1,0 +1,9 @@
+.student{
+    border: 1px solid #f1f1f1;
+    padding: 10px;
+    margin:  10px;
+}
+
+.student p{
+    margin: 0;
+}
