@@ -1,6 +1,9 @@
 import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import ReactPlayer from 'react-player';
+import Anilist from './watch-support/Anilist';
+import SelectedAnimeDesc from './watch-support/SelectedAnimeDesc';
+import './Watch.css';
 
 const baseUrl = 'https://aniweebu-api.onrender.com';
 
@@ -62,26 +65,93 @@ function Watch() {
   };
 
   return (
-    <>
-      {videoUrl && (
-        <ReactPlayer
-          ref={playerRef}
-          url={videoUrl}
-          controls
-          width="100%"
-          height="100%"
-          onReady={handlePlayerReady}
-          config={{
-            file: {
-              attributes: {
-                crossOrigin: 'anonymous',
-              },
-            },
-          }}
-        />
-      )}
-      {!videoUrl && <p>Loading video...</p>}
-    </>
+    <div className="container">
+      {/* Episode List Section */}
+      <Anilist episodeId={episodeId} /> {/* pass the episode */}
+
+      {/* Main Player Section */}
+      <div className="main-section">
+        <div className="video-section">
+          {videoUrl ? (
+            <ReactPlayer
+              ref={playerRef}
+              url={videoUrl}
+              controls
+              width="100%"
+              height="100%"
+              onReady={handlePlayerReady}
+              config={{
+                file: {
+                  attributes: {
+                    crossOrigin: 'anonymous',
+                  },
+                },
+              }}
+            />
+          ) : (
+            <img
+              src="example-video-placeholder.jpg"
+              alt="Video"
+              className="video-placeholder"
+            />
+          )}
+        </div>
+
+        {/* Next Episode Section */}
+        {/* <div className="next-episode">
+          <h3>Next episode</h3>
+          <div className="next-episode-info">
+            <img
+              src="next-episode-thumbnail.jpg"
+              alt="Next Episode"
+              className="episode-thumbnail"
+            />
+            <div className="episode-text">
+              <p>The Beginning</p>
+              <p>Episode 2</p>
+            </div>
+          </div>
+        </div> */}
+
+        {/* Subtitles Section */}
+        <div className="subtitles">
+          <h3>Subtitles</h3>
+          <div className="subtitle-options">
+            <label>
+              <input type="radio" name="subtitle" defaultChecked /> English
+            </label>
+            <label>
+              <input type="radio" name="subtitle" /> Japanese
+            </label>
+            <label>
+              <input type="radio" name="subtitle" /> Spanish
+            </label>
+            <label>
+              <input type="radio" name="subtitle" /> French
+            </label>
+          </div>
+        </div>
+
+        {/* Quality Section */}
+        <div className="quality">
+          <h3>Quality</h3>
+          <div className="quality-options">
+            <label>
+              <input type="radio" name="quality" defaultChecked /> Auto
+            </label>
+            <label>
+              <input type="radio" name="quality" /> 1080p
+            </label>
+            <label>
+              <input type="radio" name="quality" /> 720p
+            </label>
+          </div>
+        </div>
+      </div>
+
+      {/* Anime Info Section */}
+      <SelectedAnimeDesc episodeId={episodeId}/>
+    </div>
   );
 }
 
