@@ -26,9 +26,12 @@ export default function Homepage(rendered) {
 
     return (
         <PopularStyled>
-            <DotPattern />
+            <DotPattern className="DotPat"/>
             <div className="popular-anime">
-            <h2>Popular</h2>
+                <div className="Popular">
+                    <h2>Popular Anime</h2>
+                </div>
+                <div className="condittionalRender"></div>
                 {conditionalRender()}
             </div>
         </PopularStyled>
@@ -37,7 +40,16 @@ export default function Homepage(rendered) {
 
 const PopularStyled = styled.div`
     display: flex;
+    .DotPat{
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: -1;
+        width: 100%;
+        height: 100%;
+    }
     .popular-anime{
+        flex-direction: row;
         padding-top: 1rem;
         width: 100%;
         flex-wrap: wrap;
