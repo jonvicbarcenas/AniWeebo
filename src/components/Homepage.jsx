@@ -3,23 +3,30 @@ import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { useGlobalContext } from '../context/global'
 import DotPattern from '../../components/magicui/dot-pattern';
+import BlurIn from '../../components/magicui/blur-in';
+import Card from './Popular-carousel/Card';
 
 export default function Homepage(rendered) {
     const {popularAnime, isSearch} = useGlobalContext();
 
     const conditionalRender = () => {
         if(!isSearch){
-            return popularAnime?.map((anime) => {
-                 console.log(anime);
-                // return <Link to={`/anime/${anime.mal_id}`} key={anime.mal_id}> {/*anime.id*/}
-                //     <img src={anime.images.jpg.large_image_url} alt={anime.title}/> {/*anime.poster*/} {/*anime.name*/}
-                // </Link>
+            return(
+                <div className="CarouselContainer">
+                    <Card anime={popularAnime}/>
+                </div>
+            )
+            // return popularAnime?.map((anime) => {
+            //      console.log(anime);
+            //     // return <Link to={`/anime/${anime.mal_id}`} key={anime.mal_id}> {/*anime.id*/}
+            //     //     <img src={anime.images.jpg.large_image_url} alt={anime.title}/> {/*anime.poster*/} {/*anime.name*/}
+            //     // </Link>
 
                 
-                return <Link to={`/anime/${anime.id}`} key={anime.id}> {/*anime.id*/}
-                    <img src={anime.poster} alt={anime.name}/> {/*anime.poster*/} {/*anime.name*/}
-                </Link>
-            })
+            //     // return <Link to={`/anime/${anime.id}`} key={anime.id}> {/*anime.id*/}
+            //     //     <img src={anime.poster} alt={anime.name}/> {/*anime.poster*/} {/*anime.name*/}
+            //     // </Link>
+            // })
         }
     }
         
@@ -29,7 +36,7 @@ export default function Homepage(rendered) {
             <DotPattern className="DotPat"/>
             <div className="popular-anime">
                 <div className="Popular">
-                    <h2>Popular Anime</h2>
+                    <BlurIn word="Popular Anime" className="text-4xl"/>
                 </div>
                 <div className="condittionalRender"></div>
                 {conditionalRender()}
@@ -47,6 +54,11 @@ const PopularStyled = styled.div`
         z-index: -1;
         width: 100%;
         height: 100%;
+    }
+
+    .CarouselContainer{
+        position: relative;
+        width: 100vw;
     }
     .popular-anime{
         flex-direction: row;
