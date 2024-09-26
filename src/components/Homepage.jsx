@@ -14,6 +14,7 @@ export default function Homepage(rendered) {
             return(
                 <div className="CarouselContainer">
                     <Card anime={popularAnime}/>
+                    
                 </div>
             )
             // return popularAnime?.map((anime) => {
