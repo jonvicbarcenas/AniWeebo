@@ -3,11 +3,13 @@ import Homepage from './Homepage'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import AnimeItem from './AnimeItem'
 import Watch from './Watch'
+import ResponsiveAppBar from './navbar/myNavbar'
 
 function App() {
   return (
   <>
     <BrowserRouter>
+        <ResponsiveAppBar  />
         <Routes>
             <Route path="/" element={<Homepage />} />
             <Route path="/anime/:id" element={<AnimeItem />} />

@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import { useParams } from 'react-router'
 import { Link } from 'react-router-dom'
 
+
 // const baseUrl = 'https://api.jikan.moe/v4'
 const baseUrl = 'https://aniweebu-api.onrender.com'
 

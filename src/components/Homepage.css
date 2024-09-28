@@ -1,0 +1,11 @@
+/* .popular-card {
+    height: 900px !important;
+    width: 900px !important;
+} */
+
+.popular-card img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    border-radius: 7px;
+}

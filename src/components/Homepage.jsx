@@ -5,6 +5,7 @@ import { useGlobalContext } from '../context/global'
 import DotPattern from '../../components/magicui/dot-pattern';
 import BlurIn from '../../components/magicui/blur-in';
 import Card from './Popular-carousel/Card';
+import './Homepage.css';
 
 export default function Homepage(rendered) {
     const {popularAnime, isSearch} = useGlobalContext();
@@ -13,7 +14,7 @@ export default function Homepage(rendered) {
         if(!isSearch){
             return(
                 <div className="CarouselContainer">
-                    <Card anime={popularAnime}/>
+                    <Card anime={popularAnime} className="popular-card"/>
                     
                 </div>
             )
@@ -36,9 +37,6 @@ export default function Homepage(rendered) {
         <PopularStyled>
             <DotPattern className="DotPat"/>
             <div className="popular-anime">
-                <div className="Popular">
-                    <BlurIn word="Popular Anime" className="text-4xl"/>
-                </div>
                 <div className="condittionalRender"></div>
                 {conditionalRender()}
             </div>
@@ -47,40 +45,12 @@ export default function Homepage(rendered) {
 }
 
 const PopularStyled = styled.div`
-    display: flex;
     .DotPat{
         position: absolute;
         top: 0;
         left: 0;
-        z-index: -1;
+        z-index: 1;
         width: 100%;
         height: 100%;
-    }
-
-    .CarouselContainer{
-        position: relative;
-        width: 100vw;
-    }
-    .popular-anime{
-        flex-direction: row;
-        padding-top: 1rem;
-        width: 100%;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 1rem;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));    
-        display: flex;
-        a{
-            height: 350px;
-            width: 200px;
-            border-radius: 7px;
-
-        img{
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 7px;
-            
-        }
     }
 `;

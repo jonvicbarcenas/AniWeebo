@@ -1,0 +1,59 @@
+.image-container {
+    position: relative;
+    width: 100%; 
+    height: 85vh; 
+}
+
+.image-container img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.image-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgb(9,9,121);
+    background: radial-gradient(circle, rgba(9,9,121,0) 0%, rgba(30,30,44,1) 59%);
+    pointer-events: none; 
+}
+
+
+.text-container {
+    max-width: 35rem;
+    position: relative;
+    bottom: 40vh;
+    margin-left: 5vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.title h3{
+    color: white;
+    font-size: 2.4rem;
+    font-weight: bold;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.desc p {
+    margin-top: 1rem;
+}
+
+
+.btn{
+    padding-top: 1rem;
+    display: flex;
+    flex-direction: row;
+    width: 20rem;
+    gap: 10px;
+    z-index: 2;
+}
+.watch-btn {
+    width: auto;
+    padding-right: 0;
+}

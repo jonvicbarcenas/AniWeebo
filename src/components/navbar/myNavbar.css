@@ -1,0 +1,13 @@
+/* myNavbar.css */
+.appBar {
+  background-color: transparent !important;
+  transition: background-color 0.3s ease;
+  box-shadow: none !important;
+}
+
+.appBarScrolled {
+  background-color: rgba(30, 30, 44, 0.21) !important;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1) !important;
+  backdrop-filter: blur(5.9px) !important;
+  -webkit-backdrop-filter: blur(5.9px) !important;
+}
