@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import '../Watch.css'
 import { Link } from 'react-router-dom';
 
-const baseUrl = 'https://aniweebu-api.onrender.com';
+const baseUrl = 'http://13.127.169.105:4000';
 
 function SelectedAnimeDesc({episodeId}) {
     //state

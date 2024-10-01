@@ -5,7 +5,7 @@ import Anilist from './watch-support/Anilist';
 import SelectedAnimeDesc from './watch-support/SelectedAnimeDesc';
 import './Watch.css';
 
-const baseUrl = 'https://aniweebu-api.onrender.com';
+const baseUrl = 'http://13.127.169.105:4000';
 
 function Watch() {
   const { episodeId } = useParams();

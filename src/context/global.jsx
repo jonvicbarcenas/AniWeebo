@@ -3,7 +3,7 @@ import React, { createContext, useContext, useEffect, useReducer} from 'react'
 const GlobalContext = createContext();
 
 // const baseUrl = 'https://api.jikan.moe/v4'
-const baseUrl = 'https://aniweebu-api.onrender.com'
+const baseUrl = 'http://13.127.169.105:4000'
 
 //actions
 const LOADING = "LOADING";

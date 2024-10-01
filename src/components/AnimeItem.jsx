@@ -4,8 +4,7 @@ import { useParams } from 'react-router'
 import { Link } from 'react-router-dom'
 
 
-// const baseUrl = 'https://api.jikan.moe/v4'
-const baseUrl = 'https://aniweebu-api.onrender.com'
+const baseUrl = 'http://13.127.169.105:4000'
 
 function AnimeItem() {
 
