@@ -2,7 +2,7 @@ import React, {createContext, useContext, useReducer} from "react";
 
 const GlobalContext = createContext();
 
-const baseUrl = "http://13.127.169.105:4000";
+const baseUrl = "https://jvbarcenas.tech/api";
 
 //actions
 const LOADING = "LOADING";
