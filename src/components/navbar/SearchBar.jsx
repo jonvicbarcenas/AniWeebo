@@ -26,7 +26,6 @@ const SearchBar = () => {
       }
     };
 
-    // Function to handle input change
     const handleInputChange = (event, newInputValue) => {
         setInputValue(newInputValue);
     };
