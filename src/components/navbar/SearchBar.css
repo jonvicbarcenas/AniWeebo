@@ -1,0 +1,11 @@
+/* SearchBar.css */
+.search-bar {
+    background-color: #f0f0f0 ;
+    border-radius: 4px;
+  }
+
+
+  .custom-search-bar .MuiInputBase-root {
+    height: 40px; 
+    width: 100%;
+}

@@ -45,20 +45,11 @@ function AnimeItem() {
         setEpisodes(data.episodes);
     }
 
-    //get characters
-    // const getCharacters = async (anime) => {
-    //     const response = await fetch(`${baseUrl}/${anime}/characters`);
-    //     const data = await response.json();
-    //     console.log(data.data) //clg data
-    //     setCharacters(data.data.characters);
-    // }
-
 
     useEffect(() => {
         getAnime(id);
         getEpisodes(id);
-        // getCharacters(id);
-    }, [])
+    }, [id])
 
   return (
     <>
