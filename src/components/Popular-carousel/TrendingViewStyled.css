@@ -1,0 +1,80 @@
+
+.trending-anime {
+    padding: 20px;
+    /* background-color: #0d0d26; Dark background to match anime aesthetic */
+}
+
+.trending-anime h2 {
+    color: #3874cb;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.trending-container {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    padding-bottom: 20px; /* Add some padding at the bottom */
+    scroll-snap-type: x mandatory; /* Smooth scrolling effect */
+}
+
+.trendings {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    scroll-snap-align: center; /* Center the item when scrolling */
+}
+
+.trendings-content {
+    position: relative;
+    width: 150px;
+}
+
+.trendings img {
+    width: 150px;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5); /* Add some shadow for depth */
+}
+
+.trendings-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    opacity: 0;
+    background-color: rgba(0, 0, 0, 0.7); /* Darken overlay on hover */
+    border-radius: 10px;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.trendings:hover .trendings-overlay {
+    opacity: 1; /* Show overlay when hovering */
+}
+
+.trendings-overlay p {
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    margin: 0;
+    padding: 10px;
+}
+
+.rankings {
+    margin-top: 10px;
+}
+
+.rankings span {
+    font-size: 14px;
+    color: #ffffff;
+    background-color: #ff5e5e;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-weight: bold;
+}

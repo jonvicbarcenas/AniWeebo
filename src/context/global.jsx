@@ -9,6 +9,7 @@ const baseUrl = 'https://jvbarcenas.tech/api'
 const LOADING = "LOADING";
 const SEARCH = "SEARCH";
 const GET_POPULAR_ANIME = "GET_POPULAR_ANIME";
+const GET_TRENDING_ANIME = "GET_TRENDING_ANIME";
 const GET_UPCOMING_ANIME = "GET_UPCOMING_ANIME";
 const GET_AIRING_ANIME = "GET_AIRING_ANIME";
 
@@ -19,6 +20,8 @@ const reducer = (state, action) => {
             return {...state, loading: true}
         case GET_POPULAR_ANIME:
             return {...state, popularAnime: action.payload, loading: false}
+        case GET_TRENDING_ANIME:
+            return {...state, trendingAnime: action.payload, loading: false}
         case GET_UPCOMING_ANIME:
             return {...state, upcomingAnime: action.payload, loading: false}
         case GET_AIRING_ANIME:
@@ -36,6 +39,7 @@ export const GlobalContextProvider = ({children}) => {
     // initial state
     const initialState = {
         popularAnime: [],
+        trendingAnime: [],
         upcomingAnime: [],
         airingAnime: [],
         pictures: [],  
@@ -46,17 +50,7 @@ export const GlobalContextProvider = ({children}) => {
     }
 
     const [state, dispatch] = useReducer(reducer, initialState);
-
-    // // fetch popular anime
-    // const gethPopularAnime = async () => {
-    //     dispatch({type: LOADING})
-    //     const response = await fetch(`${baseUrl}/top/anime?filter=bypopularity`)//anime/home
-    //     const data = await response.json();
-    //     // console.log(data.data)
-    //     dispatch({type: 'GET_POPULAR_ANIME', payload: data.data}) //data.spotlightAnimes
-    // }
-
-        // fetch popular anime
+        //* fetch popular anime
         const gethPopularAnime = async () => {
             dispatch({type: LOADING})
             const response = await fetch(`${baseUrl}/anime/home`)
@@ -65,12 +59,19 @@ export const GlobalContextProvider = ({children}) => {
             dispatch({type: 'GET_POPULAR_ANIME', payload: data.spotlightAnimes}) 
         }
 
-
+        const getTrendingAnime = async () => {
+            dispatch({type: LOADING})
+            const response = await fetch(`${baseUrl}/anime/home`)
+            const data = await response.json();
+            // console.log(data.data)
+            dispatch({type: 'GET_TRENDING_ANIME', payload: data.trendingAnimes}) 
+        }
 
 
     //initial render
     useEffect(() => {
         gethPopularAnime()
+        getTrendingAnime()
     }, [])
 
 
