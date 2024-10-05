@@ -4,6 +4,7 @@
     height: 85vh; 
 }
 
+
 .image-container img {
     display: block;
     width: 100%;
@@ -24,21 +25,20 @@
 }
 
 
-.text-container {
-    max-width: 35rem;
-    position: relative;
-    bottom: 40vh;
-    margin-left: 5vh;
-    display: flex;
-    flex-direction: column;
+
+.AnCon {
+    position: absolute;
+    bottom: 10%;  /* Align from the top instead of bottom */
+    max-width: 45rem;
 }
 
-.title h3{
-    color: white;
-    font-size: 2.4rem;
-    font-weight: bold;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+.text-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;  /* Ensure content aligns from the top */
+    padding-left: 3.8vh;
 }
+
 
 .desc p {
     margin-top: 1rem;
@@ -56,4 +56,12 @@
 .watch-btn {
     width: auto;
     padding-right: 0;
+}
+
+
+.spotlight{
+    color: #3874cb;
+    font-weight: bold;
+    bottom: 6rem;
+    padding-bottom: 1rem;
 }

@@ -16,7 +16,7 @@ import BoxReveal from '../../../components/ui/box-reveal';
 
 const Card = ({ anime }) => {
   return (
-    <div className="w-full bg-gray-900 p-8">
+    <div>
       <Swiper
         modules={[Navigation, Autoplay]}
         spaceBetween={20}
@@ -26,21 +26,25 @@ const Card = ({ anime }) => {
       >
         {anime.map((item) => (
           <SwiperSlide key={item.id}>
-            <div className="relative popular-card">
+            <div className="popular-card">
               <div className="image-container">
                 <img
                   src={item.poster}
                   alt={item.name}
-                  className="w-full h-[450px] object-cover rounded-lg"
                 />
               </div>
-              <div className="AnCon text-container absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4">
+              <div className="AnCon text-container">
+                <div className="spotlight">
+                  <BoxReveal duration={0.5} width="fit-content" boxColor="#5046e6">
+                    <p>#{item.rank} Spotlight</p>
+                  </BoxReveal>
+                </div>
                 <div className="title">
                   <BlurIn word={item.name.length > 53 ? item.name.substring(0, 53) + '...' : item.name}/>
                 </div>
                 <div className="desc">
                   <BoxReveal duration={0.5} width="fit-content" boxColor="#5046e6">
-                    <p>{item.description.length > 100 ? item.description.substring(0, 137) + '...' : item.description}</p>
+                    <p>{item.description.length > 250 ? item.description.substring(0, 250) + '...' : item.description}</p>
                   </BoxReveal>
                 </div>
                 <div className="btn">
