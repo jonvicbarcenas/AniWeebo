@@ -1,8 +1,7 @@
-import React, { createContext, useContext, useEffect, useReducer} from 'react'
+import React, { createContext, useContext, useEffect, useReducer, useState} from 'react'
 
 const GlobalContext = createContext();
 
-// const baseUrl = 'https://api.jikan.moe/v4'
 const baseUrl = 'https://jvbarcenas.tech/api'
 
 //actions
@@ -50,6 +49,36 @@ export const GlobalContextProvider = ({children}) => {
     }
 
     const [state, dispatch] = useReducer(reducer, initialState);
+    const [search, setSearch] = useState('');
+
+    const handleChange = (e) => {
+        if (e && e.target) {
+            setSearch(e.target.value);
+            console.log(e.target.value);
+        } else {
+            console.warn("handleChange received an invalid event.");
+        }
+    };
+    
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        // console.log(search)
+        if(search){
+            searchAnime(search)
+        }
+        
+    }
+
+        //TODO search anime
+        const searchAnime = async (anime) => {
+            dispatch({type: LOADING})
+            const response = await fetch(`${baseUrl}/anime/search?q=${anime}`)
+            const data = await response.json();
+            // console.log(data.data)
+            dispatch({type: SEARCH, payload: data.animes}) 
+        }
+
         //* fetch popular anime
         const gethPopularAnime = async () => {
             dispatch({type: LOADING})
@@ -78,7 +107,11 @@ export const GlobalContextProvider = ({children}) => {
 
     return (
         <GlobalContext.Provider value={{
-            ...state
+            ...state,
+            handleChange,
+            handleSubmit,
+            searchAnime,
+            search,
         }}>
             {children}
         </GlobalContext.Provider>
