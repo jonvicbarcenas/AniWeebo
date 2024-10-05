@@ -13,9 +13,9 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import './myNavbar.css';
 import SearchBar from './SearchBar';
-
 
 const pages = ['Movies'/*, 'Pricing', 'Blog'*/];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
@@ -24,6 +24,7 @@ function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [scrolled, setScrolled] = React.useState(false);
+  const isMobile = useMediaQuery('(max-width:900px)');
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -77,11 +78,12 @@ function ResponsiveAppBar() {
           >
             Aniweeb
           </Typography>
-          {/* SearchBar component in the AppBar */}
-          <Box sx={{ flexGrow: 0.22 }}>
-            <SearchBar />
-          </Box>
-
+          {/* Conditionally render SearchBar based on viewport size */}
+          {!isMobile && (
+            <Box sx={{ flexGrow: 0.22 }}>
+              <SearchBar />
+            </Box>
+          )}
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
@@ -110,6 +112,9 @@ function ResponsiveAppBar() {
               onClose={handleCloseNavMenu}
               sx={{ display: { xs: 'block', md: 'none' } }}
             >
+              <MenuItem>
+                <SearchBar />
+              </MenuItem>
               {pages.map((page) => (
                 <MenuItem key={page} onClick={handleCloseNavMenu}>
                   <Typography sx={{ textAlign: 'center' }}>{page}</Typography>
