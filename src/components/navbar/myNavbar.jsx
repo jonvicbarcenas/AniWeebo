@@ -18,7 +18,7 @@ import './myNavbar.css';
 import SearchBar from './SearchBar';
 
 const pages = ['Movies'/*, 'Pricing', 'Blog'*/];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const settings = ['Account', 'Dashboard', 'Logout'];
 
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
