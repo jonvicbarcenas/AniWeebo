@@ -9,7 +9,7 @@ import axios from 'axios';
 
 axios.defaults.withCredentials = true;
 // axios.defaults.serverURL = 'http://localhost:5000';
-axios.defaults.serverURL = 'http://13.127.169.105:5000';
+axios.defaults.serverURL = 'https://aniweebserverdb-production.up.railway.app';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
