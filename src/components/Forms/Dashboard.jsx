@@ -1,45 +1,36 @@
-import React, { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom';
+import React, { useContext } from 'react';
+import AuthContext from '../../context/authContext';
 
-function Dashboard() {
+const Dashboard = () => {
 
-  const token = localStorage.getItem("token")
-  const [users, setUsers] = useState([]);
-  const navigate = useNavigate();
+    const { username } = useContext(AuthContext);
+    console.log(username);
 
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const response = await fetch("http://localhost:5000/api/users", {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
-        const result = await response.json();
-        setUsers(result);
-      } catch (error) {
-        console.log(error);
-      }
-    }
-    if(token)
-      fetchUsers();
-    else
-      navigate("/login")
-  }, [token, navigate]);
+    return (
+        <div style={{
+            padding: '20px',
+            maxWidth: '400px',
+            margin: '0 auto',
+            border: '1px solid #ccc',
+            borderRadius: '8px',
+            boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+        }}>
+            <h2 style={{
+                fontSize: '24px',
+                fontWeight: 'bold',
+                marginBottom: '16px'
+            }}>Dashboard</h2>
+            {username == null ? (
+                <p style={{
+                    fontSize: '18px'
+                }}>Please log in!</p>
+            ) : (
+                <p style={{
+                    fontSize: '18px'
+                }}>Welcome, <span style={{ fontWeight: 'bold' }}>{username}</span>!</p>
+            )}
+        </div>
+    );
+};
 
-  return (
-    <div>
-      <h1>Dashboard</h1>
-      <ul>
-        {Array.isArray(users) && users.map(user => (
-          <li key={user._id}>
-            <p>Name: {user.name}</p>
-            <p>Email: {user.email}</p>
-          </li>
-        ))}
-      </ul>
-    </div>
-  )
-}
-
-export default Dashboard
+export default Dashboard;

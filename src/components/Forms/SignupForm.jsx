@@ -1,116 +1,107 @@
-import React, { useState } from 'react';
-import toast, { Toaster } from 'react-hot-toast';
-import './styles.css';
-import { Link, useNavigate } from 'react-router-dom';
+'use client'
 
-const SignupForm = () => {
-  const [confirmPassword, setConfirmPassword] = useState('');
+import { useState } from 'react'
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { useNavigate } from 'react-router-dom';
+import { useToast } from '../../context/ToastContext';
+import axios from 'axios';
+
+export default function SignupForm() { 
+  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState(""); // Username state
+  const [password, setPassword] = useState("");
+  const [passwordVerify, setPasswordVerify] = useState(""); // Password verification state
+
   const navigate = useNavigate();
+  const { showToast } = useToast();
 
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-  });
+  async function register(e) {
+    e.preventDefault();
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    })
+    try {
+      const signupData = {
+        email,
+        username, 
+        password,
+        passwordVerify,
+      };
+
+      await axios.post(`${axios.defaults.serverURL}/auth/`, signupData); // Change endpoint to signup
+      showToast('Signup successful!');
+      navigate("/login");
+      window.location.reload();
+    } catch (err) {
+      console.error(err);
+      showToast(err.response?.data?.errorMessage || 'An error occurred during signup', 'errorMessage');
+    }
   }
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (formData.password !== confirmPassword) {
-      toast.error('Passwords do not match');
-      return;
-    }
-    try {
-      const response = await fetch('http://localhost:5000/api/users/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-        mode: 'no-cors', // Add this line
-      })
-      const result = await response.json();
-      console.log('Signup successful', result);
-      navigate('/');
-
-    } catch (error) {
-      console.error('Signup failed', error.message);
-      toast.error('Signup failed'); 
-
-
-    } finally {
-      setFormData({
-        name: "",
-        email: "",
-        password: ""
-      });
-    }
-
-    // console.log('Signup submitted', formData.name, formData.email, formData.password, confirmPassword );
-    toast.success('Signup successful');
-  };
-
-
   return (
-    <div className="form-container">
-      <Toaster position='bottom-right'/>
-      <h2>Sign Up</h2>
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label htmlFor="name">Name:</label>
-          <input
-            type="text"
-            id="name"
-            name='name'
-            value={formData.name}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="email">Email:</label>
-          <input
-            type="email"
-            id="email"
-            name='email'
-            value={formData.email}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="password">Password:</label>
-          <input
-            type="password"
-            id="password"
-            name='password'
-            value={formData.password}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="confirmPassword">Confirm Password:</label>
-          <input
-            type="password"
-            id="confirmPassword"
-            name='password'
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            required
-          />
-        </div>
-        <button type="submit" className="submit-btn">Sign Up</button>
-      </form>
+    <div className="flex items-center justify-center min-h-screen">
+      <Card className="w-[350px]">
+        <CardHeader className="space-y-1">
+          <CardTitle className="text-2xl">Sign Up</CardTitle>
+          <CardDescription>
+            Enter your email, username, and password to create an account
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="grid gap-4">
+          <form onSubmit={register}>
+          <div className="grid gap-2 pb-4">
+              <Label htmlFor="username">Username</Label>
+              <Input 
+                id="username" 
+                type="text" 
+                placeholder="Enter your username" 
+                value={username} // Username input
+                onChange={(e) => setUsername(e.target.value)}
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="m@example.com"
+                autoCapitalize="none"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)} />
+            </div>
+            <div className="grid gap-2 pt-4">
+              <Label htmlFor="password">Password</Label>
+              <Input 
+                id="password" 
+                type="password" 
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                />
+            </div>
+            <div className="grid gap-2 pt-4">
+              <Label htmlFor="passwordVerify">Verify Password</Label>
+              <Input 
+                id="passwordVerify" 
+                type="password" 
+                value={passwordVerify} 
+                onChange={(e) => setPasswordVerify(e.target.value)}
+                />
+            </div>
+            <Button className="w-full mt-6" type="submit">
+              Sign Up
+            </Button>
+          </form>
+        </CardContent>
+        <CardFooter>
+          <div className="text-sm text-center w-full">
+            Already have an account?{' '}
+            <a href="/login" className="text-primary hover:underline">
+              Log in
+            </a>
+          </div>
+        </CardFooter>
+      </Card>
     </div>
   );
-};
-
-export default SignupForm;
+}

@@ -1,84 +1,84 @@
-import React, { useState } from 'react';
-import toast, {Toaster} from 'react-hot-toast';
-import './styles.css';
+'use client'
+
+import { useState } from 'react'
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { useNavigate } from 'react-router-dom';
+import { useToast } from '../../context/ToastContext';
+import axios from 'axios';
 
-const LoginForm = () => {
+export default function LoginForm() { 
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    email: '',
-    password: ''
-  });
+  const { showToast } = useToast();
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    })
+  async function register(e) {
+    e.preventDefault();
+
+    try {
+      const loginData = {
+        email,
+        password,
+      };
+
+      await axios.post(`${axios.defaults.serverURL}/auth/login`, loginData);
+      showToast('Log In successful!');
+      navigate("/");
+      window.location.reload();
+    } catch (err) {
+      console.error(err);
+      showToast(err.response?.data?.errorMessage || 'An error occurred during registration', 'errorMessage');
+    }
   }
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await fetch('http://localhost:5000/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (!response.ok) {
-        throw new Error('Invalid credentials');
-      }
-
-      const result = await response.json();
-      localStorage.setItem("token", result.token);
-      console.log('Login successful', result);
-      toast.success('Login successful');
-      navigate('/dashboard');
-
-    } catch (error) {
-      console.error('Login failed', error.message);
-      toast.error('Login failed'); 
-    } finally {
-      setFormData({
-        email: "",
-        password: ""
-      });
-    }
-  };
-
   return (
-    <div className="form-container">
-      <Toaster position='bottom-right'/>
-      <h2>Login</h2>
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label htmlFor="email">Email:</label>
-          <input
-            type="email"
-            value={formData.email}
-            name='email'
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="password">Password:</label>
-          <input
-            type="password"
-            name='password'
-            value={formData.password}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-        <button type="submit" className="submit-btn">Login</button>
-      </form>
+    <div className="flex items-center justify-center min-h-screen">
+      <Card className="w-[350px]">
+        <CardHeader className="space-y-1">
+          <CardTitle className="text-2xl">Login</CardTitle>
+          <CardDescription>
+            Enter your email and password to login
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="grid gap-4">
+          <form onSubmit={register}>
+            <div className="grid gap-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="m@example.com"
+                autoCapitalize="none"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)} />
+            </div>
+            <div className="grid gap-2 pt-4">
+              <Label htmlFor="password">Password</Label>
+              <Input 
+                id="password" 
+                type="password" 
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                />
+            </div>
+            <Button className="w-full mt-6" type="submit">
+              Sign In
+            </Button>
+          </form>
+        </CardContent>
+        <CardFooter>
+          <div className="text-sm text-center w-full">
+            Don't have an account?{' '}
+            <a href="/signup" className="text-primary hover:underline">
+              Sign up
+            </a>
+          </div>
+        </CardFooter>
+      </Card>
     </div>
   );
-};
-
-export default LoginForm;
+}

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -16,15 +17,26 @@ import AdbIcon from '@mui/icons-material/Adb';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import './myNavbar.css';
 import SearchBar from './SearchBar';
+import AuthContext from '../../context/authContext';
+import useLogout from '../Forms/UseLogout';
+import axios from 'axios';
 
-const pages = ['Movies'/*, 'Pricing', 'Blog'*/];
-const settings = ['Account', 'Dashboard', 'Logout'];
+const pages = ['Movies'];
 
 function ResponsiveAppBar() {
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
-  const [scrolled, setScrolled] = React.useState(false);
+  const [anchorElNav, setAnchorElNav] = useState(null);
+  const [anchorElUser, setAnchorElUser] = useState(null);
+  const [scrolled, setScrolled] = useState(false);
   const isMobile = useMediaQuery('(max-width:900px)');
+
+  const { username, avatar } = useContext(AuthContext);
+  const logOut = useLogout();
+
+  const settings = [
+    { name: 'Account', path: '/account' },
+    { name: 'Dashboard', path: '/dashboard' },
+    { name: 'Logout', onClick: logOut },
+  ];
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -78,7 +90,6 @@ function ResponsiveAppBar() {
           >
             Aniweeb
           </Typography>
-          {/* Conditionally render SearchBar based on viewport size */}
           {!isMobile && (
             <Box sx={{ flexGrow: 0.22 }}>
               <SearchBar />
@@ -123,7 +134,6 @@ function ResponsiveAppBar() {
             </Menu>
           </Box>
 
-          {/* MOBILE */}
           <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
           <Typography
             variant="h5"
@@ -155,33 +165,51 @@ function ResponsiveAppBar() {
             ))}
           </Box>
           <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="JV Barcenas" src="/static/images/avatar/2.jpg" />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: '45px' }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography sx={{ textAlign: 'center' }}>{setting}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
+            {username ? (
+              <>
+                <Tooltip title="Open settings">
+                  <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                    <Avatar alt={username} src={`${axios.defaults.serverURL}/avatars/${avatar}`} />
+                  </IconButton>
+                </Tooltip>
+                <Menu
+                  sx={{ mt: '45px' }}
+                  id="menu-appbar"
+                  anchorEl={anchorElUser}
+                  anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  open={Boolean(anchorElUser)}
+                  onClose={handleCloseUserMenu}
+                >
+                  {settings.map((setting) => (
+                    <MenuItem
+                      key={setting.name}
+                      onClick={() => {
+                        handleCloseUserMenu();
+                        if (setting.onClick) {
+                          setting.onClick();
+                        }
+                      }}
+                      component={setting.path ? Link : 'div'}
+                      to={setting.path || '#'}
+                    >
+                      <Typography sx={{ textAlign: 'center' }}>{setting.name}</Typography>
+                    </MenuItem>
+                  ))}
+                </Menu>
+              </>
+            ) : (
+              <Button component={Link} to="/login" sx={{ color: 'white', background: '#1976D2' }}>
+                Login
+              </Button>
+            )}
           </Box>
         </Toolbar>
       </Container>

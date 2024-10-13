@@ -20,7 +20,6 @@ function App() {
             <Route path="/signup" element={<SignupForm/>} />
             <Route path="/login" element={<LoginForm/>} />
             <Route path="/dashboard" element={<Dashboard/>} />
-            <Route path="*" element={<LoginForm/>} />
         </Routes>
     </BrowserRouter>
   </>

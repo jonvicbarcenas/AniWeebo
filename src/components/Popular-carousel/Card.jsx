@@ -40,7 +40,7 @@ const Card = ({ anime }) => {
                   </BoxReveal>
                 </div>
                 <div className="title">
-                  <BlurIn word={item.name.length > 53 ? item.name.substring(0, 53) + '...' : item.name}/>
+                  <BlurIn className="font-extrabold text-xs" word={item.name.length > 53 ? item.name.substring(0, 53) + '...' : item.name}/>
                 </div>
                 <div className="desc">
                   <BoxReveal duration={0.5} width="fit-content" boxColor="#5046e6">
