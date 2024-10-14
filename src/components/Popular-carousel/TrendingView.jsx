@@ -11,7 +11,7 @@ export default function TrendingView({ anime }) {
   return (
     <>
       <div className="trending-anime">
-        <h2>Trending</h2>
+        <h2>Trendings</h2>
         <Swiper
           modules={[Navigation]}
           spaceBetween={30}
