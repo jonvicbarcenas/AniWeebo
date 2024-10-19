@@ -8,7 +8,7 @@ export const ToastProvider = ({ children }) => {
 
   const showToast = (msg, type = 'success') => {
     setMessage(msg);
-    if (type === 'errorMessage') {
+    if (type === 'errorMessage' || type === 'error') {
       toast.error(msg);
     } else {
       toast.success(msg);

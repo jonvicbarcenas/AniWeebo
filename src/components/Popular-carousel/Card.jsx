@@ -14,8 +14,12 @@ import BlurIn from '../../../components/magicui/blur-in';
 import BoxReveal from '../../../components/ui/box-reveal';
 import { Skeleton } from '@mui/material';
 
+import { useToast } from '../../context/ToastContext'; //remove this line if not needed
+
 const Card = ({ anime }) => {
   const loading = !anime || anime.length === 0;
+
+  const { showToast } = useToast(); //remove this line if not needed
 
   return (
     <div>
@@ -68,7 +72,7 @@ const Card = ({ anime }) => {
                   </div>
                   <div className="btn">
                     <div className="watch-btn">
-                      <Button variant="contained" startIcon={<PlayArrowIcon />}>Watch Now</Button>
+                      <Button variant="contained" onClick={() => showToast('>///< to be implemented!⚙️🔨\n use details button for naw', 'error')} startIcon={<PlayArrowIcon />}>Watch Now</Button>
                     </div>
                     <div className="details">
                       <Link to={`/anime/${item.id}`} key={item.id}> {/*anime.id*/}
