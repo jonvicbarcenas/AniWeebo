@@ -1,130 +1,103 @@
-import React, {useEffect, useState} from 'react'
-import styled from 'styled-components'
+import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
 import { Link } from 'react-router-dom'
-
+import Loader from './screens/Loader'
 
 const baseUrl = 'https://jvbarcenas.tech/api'
 
 function AnimeItem() {
+    const { id } = useParams();
+    const [anime, setAnime] = useState({});
+    const [showMore, setShowMore] = useState(false);
+    const [episodes, setEpisodes] = useState([]);
+    const [loading, setLoading] = useState(true);
+    // console.log(anime);
 
-    const {id} = useParams();
-    console.log(id)
+    const { info, moreInfo } = anime;
 
-    //state
-    const [anime, setAnime] = useState({}); //anime
-    const [showMore, setShowMore] = useState(false); //showMore
-    const [episodes, setEpisodes] = useState([]); //episodes
-    const [characters, setCharacters] = useState([]); //characters
-
-    //destructure anime
-    const {
-            // name, poster, description, stats, aired, rating, 
-            // rank, scored_by, 
-            // popularity, status, score,
-            // source, season, synopsis,
-            // trailer, characters_staff
-            info,  moreInfo
-        } = anime;
-    
-
-    //get anime base on id
-    const getAnime = async (anime) => {
-        const response = await fetch(`${baseUrl}/anime/info?id=${anime}`);
+    const getAnime = async (animeId) => {
+        const response = await fetch(`${baseUrl}/anime/info?id=${animeId}`);
         const data = await response.json();
-        console.log(data.anime) 
         setAnime(data.anime);
-        
     }
 
-    //get episodes
-    const getEpisodes = async (anime) => {
-        const response = await fetch(`${baseUrl}/anime/episodes/${anime}`);
+    const getEpisodes = async (animeId) => {
+        const response = await fetch(`${baseUrl}/anime/episodes/${animeId}`);
         const data = await response.json();
-        console.log(data.episodes) //clg data
         setEpisodes(data.episodes);
     }
-
 
     useEffect(() => {
         getAnime(id);
         getEpisodes(id);
     }, [id])
 
-  return (
-    <>
-    <AnimeItemStyled>
-        <div className="anime-about">
-            <h1>{info?.name}</h1>
-            <div className="details">
-                <div className="detail">
-                    <div className="image">
-                        <img src={info?.poster} alt={info?.name}/>
-                    </div>
-                    <div className="anime-details">
-                            {/* <p><span>Rank: </span><span>{rank}</span></p> */}
-                            {/* <p><span>Scored By: </span><span>{scored_by}</span></p> */}
-                            {/* <p><span>Popularity: </span><span>{popularity}</span></p> */}
-                            {/* <p><span>Source: </span><span>{source}</span></p> */}
-                            {/* <p><span>Season: </span><span>{}</span></p> */}
-                            <p><span>Aired:</span><span>{moreInfo?.aired}</span></p> 
-                            <p><span>Score: </span><span>{moreInfo?.malscore}</span></p>
-                            <p><span>Status: </span><span>{moreInfo?.status}</span></p>
-                            <p><span>Rating: </span><span>{info?.stats.rating}</span></p>
-                            <p><span>Duration: </span><span>{info?.stats.duration}</span></p>
-                            <p><span>Sub Episodes: </span><span>{info?.stats.episodes.sub}</span></p>
-                    </div>
-                    <p className="description">
-                        {showMore ? info.description : info?.description.substring(0, 450) + '...'}
-                        <button onClick={() => {
-                            setShowMore(!showMore)
-                        }}>{showMore ? 'Show Less' : 'Read More'}</button>
-                    </p>
-                </div>
-                {/* <h3 className="name">Trailer</h3>
-                <div className="trailer-con">
-                        {trailer?.embed_url ? 
-                            <iframe 
-                                src={trailer.embed_url} 
-                                name="Inline Frame Example"
-                                    width="800"
-                                    height="450" 
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                    allowfullscreen>
-                            </iframe> : <p>No Trailer</p>}
-                </div> */}
-            </div>
-        </div>
-        <div className="episodes">
-            <h2>Episodes</h2>
-            <div className="episode-list">
-                {episodes.map((episode) => {
-                    return (
-                        <div className="episode" key={episode.number}>
-                            <Link to={`/anime/watch/${episode.episodeId}`}>
-                                <p>{episode.number}. {episode.title}</p>
-                            </Link>
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            if (anime && Object.keys(anime).length > 0) {
+                setLoading(false);
+            }
+        }, 100);
+    
+        return () => clearTimeout(timer);
+    }, [anime]);
+
+    return (
+        <>
+        {loading ? (
+            <Loader />    
+        ) : (
+            <div className="p-12">
+            <div className="max-w-6xl mx-auto">
+                <h1 className="text-4xl font-bold mb-8 text-center">{info?.name}</h1>
+                <div className="bg-white bg-opacity-10 rounded-lg shadow-lg p-6 backdrop-blur-md">
+                    <div className="md:flex">
+                        <div className="md:w-1/3">
+                            <img src={info?.poster} alt={info?.name} className="w-full h-auto rounded-lg shadow-md transform hover:scale-105 transition-transform duration-300" />
                         </div>
-                    )
-                })}
+                        <div className="md:w-2/3 md:pl-8 mt-4 md:mt-0">
+                            <div className="grid grid-cols-2 gap-4 mb-4">
+                                <p><span className="font-bold">Aired:</span> {moreInfo?.aired}</p>
+                                <p><span className="font-bold">Score:</span> <span className="text-yellow-300">{moreInfo?.malscore}</span></p>
+                                <p><span className="font-bold">Status:</span> {moreInfo?.status}</p>
+                                <p><span className="font-bold">Rating:</span> {info?.stats.rating}</p>
+                                <p><span className="font-bold">Duration:</span> {info?.stats.duration}</p>
+                                <p><span className="font-bold">Sub Episodes:</span> {info?.stats.episodes.sub}</p>
+                            </div>
+                            <p className="text-sm leading-relaxed">
+                                {showMore ? info?.description : info?.description?.substring(0, 450) + (info?.description?.length > 450 ? '...' : '')}
+                                {info?.description?.length > 450 && (
+                                    <p
+                                        onClick={() => setShowMore(!showMore)}
+                                        className="ml-2 text-pink-300 hover:text-pink-100 transition-colors duration-300"
+                                    >
+                                        {showMore ? 'Show Less' : '+ Read More'}
+                                    </p>
+                                )}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="mt-12">
+                    <h2 className="text-3xl font-bold mb-6 text-center">Episodes</h2>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                        {episodes.map((episode) => (
+                            <Link to={`/anime/watch/${episode.episodeId}`} key={episode.number} className="block">
+                                <div className="bg-white bg-opacity-10 rounded-lg p-4 hover:bg-opacity-20 transition-all duration-300 transform hover:-translate-y-1">
+                                    <p className="font-semibold text-lg">
+                                        {episode.number}. {episode.title ? (episode.title.length > 25 ? `${episode.title.substring(0, 25)}...` : episode.title) : ''}
+                                    </p>
+                                </div>
+                            </Link>
+                        ))}
+                    </div>
+                </div>
             </div>
         </div>
-    </AnimeItemStyled>
-    </>
-  )
+        )}
+        </>
+    )
 }
-//YT 54:06
+
 export default AnimeItem
-
-const AnimeItemStyled = styled.div`
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    height: 100vh;
-
-    .episodes{
-        margin-right: 5rem;
-        width: 550px;
-        margin-left: 2rem;
-    }
-`;

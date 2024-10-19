@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,7 +8,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { AlertCircle } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { useToast } from '../context/ToastContext'; 
+import { useToast } from '../../context/ToastContext'; 
+import AuthContext from '../../context/authContext';
+import Loader from './../screens/Loader';
 
 export function AccountPage() {
   const [avatarOptions, setAvatarOptions] = useState([]);
@@ -19,31 +21,47 @@ export function AccountPage() {
   const [error, setError] = useState("");
   const [currentUser, setCurrentUser] = useState(null);
   const [currentAvatarUrl, setCurrentAvatarUrl] = useState("");
+  const [loading, setLoading] = useState(true);
   const { showToast } = useToast();
+  const { username: authUsername } = useContext(AuthContext);
 
   useEffect(() => {
-    axios.get(`${axios.defaults.serverURL}/auth/profile`)
-      .then(response => {
-        setCurrentUser(response.data);
-        setUsername(response.data.username || "");
+    if (authUsername) {
+      axios.get(`${axios.defaults.serverURL}/auth/profile`)
+        .then(response => {
+          setCurrentUser(response.data);
+          setUsername(response.data.username || "");
 
-        // Set the selectedAvatar to the user's current avatar
-        const userAvatarUrl = `${axios.defaults.serverURL}/avatars/${response.data.avatar}`;
-        setSelectedAvatar(userAvatarUrl);
-        setCurrentAvatarUrl(userAvatarUrl);
-      })
-      .catch(error => {
-        console.error("Error fetching user profile:", error);
-      });
+          // Set the selectedAvatar to the user's current avatar
+          const userAvatarUrl = `${axios.defaults.serverURL}/avatars/${response.data.avatar}`;
+          setSelectedAvatar(userAvatarUrl);
+          setCurrentAvatarUrl(userAvatarUrl);
+        })
+        .catch(error => {
+          console.error("Error fetching user profile:", error);
+        });
 
-    axios.get(`${axios.defaults.serverURL}/list`)
-      .then(response => {
-        setAvatarOptions(response.data);
-      })
-      .catch(error => {
-        console.error("Error fetching avatars:", error);
-      });
-  }, []);
+      axios.get(`${axios.defaults.serverURL}/list`)
+        .then(response => {
+          setAvatarOptions(response.data);
+        })
+        .catch(error => {
+          console.error("Error fetching avatars:", error);
+        });
+    }
+  }, [authUsername]);
+
+  useEffect(() => {
+    if (authUsername == null) {
+      setLoading(false);
+    } else {
+      const timer = setTimeout(() => {
+        setLoading(false);
+      }, 800);
+
+      return () => clearTimeout(timer);
+    }
+  }, [authUsername]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -52,18 +70,18 @@ export function AccountPage() {
       showToast("Passwords do not match", "errorMessage");
       return;
     }
-  
+
     const avatarFilename = selectedAvatar.split('/').pop();
-  
+
     const updatedProfile = {
       username: username || currentUser.username,
       avatar: avatarFilename,
     };
-  
+
     if (password) {
       updatedProfile.password = password;
     }
-  
+
     axios.put(`${axios.defaults.serverURL}/auth/profile`, updatedProfile)
       .then(response => {
         console.log("Profile updated successfully", response.data);
@@ -78,6 +96,23 @@ export function AccountPage() {
         showToast(errorMessage, "errorMessage");
       });
   };
+
+  if (loading) {
+    return <Loader />;
+  }
+
+  if (!authUsername) {
+    return (
+      <div className="container mx-auto py-10">
+        <Card className="max-w-2xl mx-auto">
+          <CardHeader>
+            <CardTitle>Please Login</CardTitle>
+            <CardDescription>You need to be logged in to view this page.</CardDescription>
+          </CardHeader>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto py-10">
@@ -119,7 +154,6 @@ export function AccountPage() {
                 ))}
               </RadioGroup>
             </div>
-            {/* Rest of the form fields remain the same */}
             <div className="space-y-2">
               <Label htmlFor="username">Username</Label>
               <Input

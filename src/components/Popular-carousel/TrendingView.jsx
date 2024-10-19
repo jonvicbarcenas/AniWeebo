@@ -4,10 +4,12 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/swiper-bundle.css"; 
 import "swiper/css/navigation";
 import { Navigation } from "swiper/modules";
-import { Link } from 'react-router-dom'
-
+import { Link } from 'react-router-dom';
+import { Skeleton } from '@mui/material';
 
 export default function TrendingView({ anime }) {
+  const loading = !anime || anime.length === 0;
+
   return (
     <>
       <div className="trending-anime">
@@ -31,23 +33,35 @@ export default function TrendingView({ anime }) {
           }}
           navigation
         >
-          {anime.map((item) => (
-            <SwiperSlide key={item.name}>
-              <div className="trendings">
-                <div className="trendings-content">
-                  <Link to={`/anime/${item.id}`} key={item.id}>
-                  <div className="trendings-overlay">
-                    <p>{item.name}</p>
-                    <div className='rankings'>
-                      <span>{item.rank}</span>
-                    </div>
-                  </div>
-                  </Link>
-                  <img src={item.poster} alt={item.name} />
+          {loading ? (
+            Array.from(new Array(8)).map((_, index) => (
+              <SwiperSlide key={index}>
+                <div className="trendings">
+                  <Skeleton variant="rectangular" width="100%" height={200} />
+                  <Skeleton width="60%" />
+                  <Skeleton width="40%" />
                 </div>
-              </div>
-            </SwiperSlide>
-          ))}
+              </SwiperSlide>
+            ))
+          ) : (
+            anime.map((item) => (
+              <SwiperSlide key={item.name}>
+                <div className="trendings">
+                  <div className="trendings-content">
+                    <Link to={`/anime/${item.id}`} key={item.id}>
+                      <div className="trendings-overlay">
+                        <p>{item.name}</p>
+                        <div className='rankings'>
+                          <span>{item.rank}</span>
+                        </div>
+                      </div>
+                    </Link>
+                    <img src={item.poster} alt={item.name} />
+                  </div>
+                </div>
+              </SwiperSlide>
+            ))
+          )}
         </Swiper>
       </div>
     </>

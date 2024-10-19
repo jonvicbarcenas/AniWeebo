@@ -7,7 +7,7 @@ import ResponsiveAppBar from './navbar/myNavbar'
 import SignupForm from './Forms/SignupForm'
 import LoginForm from './Forms/LoginForm'
 import Dashboard from './Forms/Dashboard'
-import { AccountPage } from './account-page'
+import { AccountPage } from './Forms/account-page'
 
 function App() {
   return (

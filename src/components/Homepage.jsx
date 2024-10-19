@@ -9,17 +9,16 @@ export default function Homepage() {
     const { popularAnime, trendingAnime } = useGlobalContext();
     const [loading, setLoading] = useState(true);
 
-    // Add a delay of 2 seconds before showing the anime content
     useEffect(() => {
         const timer = setTimeout(() => {
-            if (popularAnime && trendingAnime) {
+            if (Array.isArray(popularAnime) && popularAnime.length > 0 && Array.isArray(trendingAnime) && trendingAnime.length > 0) {
                 setLoading(false);
             }
-        }, 900); 
-
-        // Clean up the timer if the component unmounts
+        }, 100);
+    
         return () => clearTimeout(timer);
     }, [popularAnime, trendingAnime]);
+
 
     return (
         <>
