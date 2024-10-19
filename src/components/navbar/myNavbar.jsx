@@ -91,7 +91,7 @@ function ResponsiveAppBar() {
             Aniweeb
           </Typography>
           {!isMobile && (
-            <Box sx={{ flexGrow: 0.22 }}>
+            <Box className="w-72">
               <SearchBar />
             </Box>
           )}
@@ -157,8 +157,9 @@ function ResponsiveAppBar() {
             {pages.map((page) => (
               <Button
                 key={page}
+                variant='ghost'
                 onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block' }}
+                sx={{ my: 2, color: 'white', display: 'block', outline: 'none !important' }}
               >
                 {page}
               </Button>

@@ -18,6 +18,7 @@ export default function Watch() {
   const [videoUrl, setVideoUrl] = useState('');
   const [englishSubtitle, setEnglishSubtitle] = useState('');
   const [isMuted, setIsMuted] = useState(false);
+  const [activeSubtitle, setActiveSubtitle] = useState('');
   const playerRef = useRef(null);
 
   const [loading, setLoading] = useState(true);
@@ -47,16 +48,37 @@ export default function Watch() {
   }, [fullEpisodeId, episodeParam]);
 
   const handlePlayerReady = () => {
-    if (playerRef.current && englishSubtitle) {
+    if (playerRef.current && episode?.tracks) {
       const videoElement = playerRef.current.getInternalPlayer();
       if (videoElement) {
-        const track = document.createElement('track');
-        track.kind = 'captions';
-        track.label = 'English';
-        track.srclang = 'en';
-        track.src = englishSubtitle;
-        track.default = true;
-        videoElement.appendChild(track);
+        // Clear existing tracks before adding new ones
+        const existingTracks = videoElement.querySelectorAll('track');
+        existingTracks.forEach((track) => videoElement.removeChild(track));
+
+        // Add tracks from episode data
+        episode.tracks
+          .filter(track => track.kind === 'captions')
+          .forEach(trackData => {
+            const track = document.createElement('track');
+            track.kind = trackData.kind;
+            track.label = trackData.label;
+            track.srclang = trackData.label.toLowerCase();
+            track.src = trackData.file;
+            track.default = trackData.default || false;
+            videoElement.appendChild(track);
+          });
+      }
+    }
+  };
+
+  const changeCaptionTrack = (label) => {
+    setActiveSubtitle(label);
+    const videoElement = playerRef.current.getInternalPlayer();
+    if (videoElement) {
+      // Disable all tracks except the one with the matching label
+      const tracks = videoElement.textTracks;
+      for (let i = 0; i < tracks.length; i++) {
+        tracks[i].mode = tracks[i].label === label ? 'showing' : 'disabled';
       }
     }
   };
@@ -75,7 +97,7 @@ export default function Watch() {
             <div className="flex flex-col lg:flex-row">
               {/* Episode List */}
               <div className="w-full lg:w-1/4 pr-4 mb-4 lg:mb-0">
-                <div className="bg-gray-800 rounded-lg p-4">
+                <div className="bg-gray-800 rounded-lg p-4 h-96 overflow-y-auto custom-scrollbar">
                   <div className="flex justify-between items-center mb-4">
                     <h3 className="text-lg font-bold">List of episodes:</h3>
                   </div>
@@ -124,9 +146,9 @@ export default function Watch() {
                     <button className="bg-gray-700 hover:bg-gray-600 p-2 rounded">
                       <SkipForward className="w-5 h-5" />
                     </button>
-                      <button className="bg-gray-700 hover:bg-gray-600 p-2 rounded" onClick={toggleMute}>
-                        {isMuted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
-                      </button>
+                    <button className="bg-gray-700 hover:bg-gray-600 p-2 rounded" onClick={toggleMute}>
+                      {isMuted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
+                    </button>
                   </div>
                   <div className="flex space-x-2">
                     <button className="bg-gray-700 hover:bg-gray-600 px-3 py-1 rounded text-sm">

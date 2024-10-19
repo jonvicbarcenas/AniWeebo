@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
 import { Link } from 'react-router-dom'
 import Loader from './screens/Loader'
+import SparklesText from './ui/sparkles-text'
 
 const baseUrl = 'https://jvbarcenas.tech/api'
 
@@ -49,7 +50,7 @@ function AnimeItem() {
         ) : (
             <div className="p-12">
             <div className="max-w-6xl mx-auto">
-                <h1 className="text-4xl font-bold mb-8 text-center">{info?.name}</h1>
+                <h1 className="text-4xl font-bold mb-8 text-center">{<SparklesText text={info.name}/>}</h1>
                 <div className="bg-white bg-opacity-10 rounded-lg shadow-lg p-6 backdrop-blur-md">
                     <div className="md:flex">
                         <div className="md:w-1/3">
