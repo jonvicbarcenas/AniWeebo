@@ -1,10 +1,6 @@
 /* Watch.css */
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
+
   
   body {
     background-color: #1e1e2d;
@@ -102,3 +98,15 @@
     margin-bottom: 10px;
   }
   
+  /* CSS to remove focus outline on the video player */
+.react-player-container:focus,
+.react-player-container:focus-visible {
+  outline: none;
+  border: none;
+}
+
+/* Ensure no border appears around the video player */
+.react-player-container video {
+  outline: none;
+  border: none;
+}

@@ -90,6 +90,7 @@ export default function Watch() {
                   {videoUrl ? (
                     <ReactPlayer
                       ref={playerRef}
+                      className="react-player-container"
                       url={videoUrl}
                       controls
                       width="100%"
