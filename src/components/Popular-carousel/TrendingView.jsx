@@ -16,7 +16,7 @@ export default function TrendingView({ anime }) {
           modules={[Navigation]}
           spaceBetween={30}
           breakpoints={{
-            640: {
+            420: {
               slidesPerView: 2, // For small screens
             },
             768: {

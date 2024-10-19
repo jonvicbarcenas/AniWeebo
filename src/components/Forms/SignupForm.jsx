@@ -65,7 +65,7 @@ export default function SignupForm() {
               <Input
                 id="email"
                 type="email"
-                placeholder="m@example.com"
+                placeholder="user@example.com"
                 autoCapitalize="none"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)} />

@@ -7,6 +7,7 @@ import ResponsiveAppBar from './navbar/myNavbar'
 import SignupForm from './Forms/SignupForm'
 import LoginForm from './Forms/LoginForm'
 import Dashboard from './Forms/Dashboard'
+import { AccountPage } from './account-page'
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
             <Route path="/signup" element={<SignupForm/>} />
             <Route path="/login" element={<LoginForm/>} />
             <Route path="/dashboard" element={<Dashboard/>} />
+            <Route path="/account" element={<AccountPage/>} />
         </Routes>
     </BrowserRouter>
   </>
