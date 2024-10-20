@@ -32,8 +32,13 @@ html, body {
   bottom: 0;
   background-color: #1e1e2c !important;
   box-sizing: border-box;
+  color: #fff;
 }
 
+/* Add this CSS to your stylesheet */
+.react-player-container.highlight-progress-bar .react-player__controls .react-player__progress {
+  background-color: yellow !important; /* Change this to your desired highlight color */
+}
 
 /* body {
   margin: 0;

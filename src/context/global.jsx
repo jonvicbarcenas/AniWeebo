@@ -95,6 +95,7 @@ export const GlobalContextProvider = ({children}) => {
             // console.log(data.data)
             dispatch({type: 'GET_TRENDING_ANIME', payload: data.trendingAnimes}) 
         }
+        
 
 
     //initial render

@@ -26,7 +26,7 @@ function Anilist({ episodeId, fullEpisodeId }) {
     }
   }, [episodeId]);
 
-  console.log('episode:', episodeId);
+  // console.log('episode:', episodeId);
 
   const handleClick = (url) => (event) => {
     event.preventDefault();
