@@ -67,10 +67,8 @@ export default function Watch() {
       if (!response.ok) throw new Error('Failed to fetch data');
       const result = await response.json();
       const data = result.data;
-      // console.log('API response data:', data); // Debugging line
       const duration = data.anime?.info?.stats?.duration;
       if (duration) {
-        // Convert duration from minutes to seconds if it ends with 'm'
         const durationInSeconds = duration.endsWith('m')
           ? parseInt(duration) * 60
           : parseInt(duration);
@@ -102,8 +100,6 @@ export default function Watch() {
       console.error('Error fetching episode data:', error);
     }
   };
-
-  // console.log('Duration:', duration);
 
   useEffect(() => {
     if (episodeParam) getEpisodes(fullEpisodeId);
