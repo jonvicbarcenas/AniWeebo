@@ -5,19 +5,19 @@ const Dashboard = () => {
     const { username } = useContext(AuthContext);
     const { watchedTime } = useContext(AuthContext);
 
-    console.log(username);
-    console.log(watchedTime);
+    // console.log(username);
+    // console.log(watchedTime);
 
-    useEffect(() => {
-        if (watchedTime) {
-            watchedTime.forEach(item => {
-                console.log(`ID: ${item.id}`);
-                item.episodes.forEach(episode => {
-                    console.log(`Episode: ${episode.episode}, Time: ${episode.time}`);
-                });
-            });
-        }
-    }, [watchedTime]);
+    // useEffect(() => {
+    //     if (watchedTime) {
+    //         watchedTime.forEach(item => {
+    //             console.log(`ID: ${item.id}`);
+    //             item.episodes.forEach(episode => {
+    //                 console.log(`Episode: ${episode.episode}, Time: ${episode.time}`);
+    //             });
+    //         });
+    //     }
+    // }, [watchedTime]);
 
     return (
         <div style={{

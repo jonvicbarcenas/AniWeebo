@@ -50,7 +50,7 @@ function AuthContextProvider(props) {
       const watchedTimeRes = await axios.get(
         `${axios.defaults.serverURL}/auth/profile/watched`
       );
-      console.log("Watched Time Response:", watchedTimeRes.data); // Add this line
+      // console.log("Watched Time Response:", watchedTimeRes.data); // Add this line
       if (watchedTimeRes.data) {
         setWatchedTime(watchedTimeRes.data);
       } else {

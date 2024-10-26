@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
-const baseUrl = 'https://jvbarcenas.tech/api';
+const baseUrl = 'https://jvbarcenas.tech/api/v2/hianime';
 
 function Anilist({ episodeId, fullEpisodeId }) {
   const { episodeId: currentEpisodeId } = useParams(); // Get current episodeId from the URL
@@ -9,11 +9,12 @@ function Anilist({ episodeId, fullEpisodeId }) {
 
   const getEpisodes = async (animeId) => {
     try {
-      const response = await fetch(`${baseUrl}/anime/episodes/${animeId}`);
+      const response = await fetch(`${baseUrl}/anime/${animeId}/episodes`);
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-      const data = await response.json();
+      const res = await response.json();
+      const data = res.data;
       setEpisodes(data.episodes);
     } catch (error) {
       console.error('Fetch error:', error);

@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import Loader from './screens/Loader'
 import SparklesText from './ui/sparkles-text'
 
-const baseUrl = 'https://jvbarcenas.tech/api'
+const baseUrl = 'https://jvbarcenas.tech/api/v2/hianime'
 
 function AnimeItem() {
     const { id } = useParams();
@@ -12,20 +12,20 @@ function AnimeItem() {
     const [showMore, setShowMore] = useState(false);
     const [episodes, setEpisodes] = useState([]);
     const [loading, setLoading] = useState(true);
-    // console.log(anime);
+    // console.log("test: ", episodes);
 
     const { info, moreInfo } = anime;
 
     const getAnime = async (animeId) => {
-        const response = await fetch(`${baseUrl}/anime/info?id=${animeId}`);
+        const response = await fetch(`${baseUrl}/anime/${animeId}`);
         const data = await response.json();
-        setAnime(data.anime);
+        setAnime(data.data.anime);
     }
 
     const getEpisodes = async (animeId) => {
-        const response = await fetch(`${baseUrl}/anime/episodes/${animeId}`);
+        const response = await fetch(`${baseUrl}/anime/${animeId}/episodes`);
         const data = await response.json();
-        setEpisodes(data.episodes);
+        setEpisodes(data.data.episodes);
     }
 
     useEffect(() => {
@@ -63,7 +63,8 @@ function AnimeItem() {
                                 <p><span className="font-bold">Status:</span> {moreInfo?.status}</p>
                                 <p><span className="font-bold">Rating:</span> {info?.stats.rating}</p>
                                 <p><span className="font-bold">Duration:</span> {info?.stats.duration}</p>
-                                <p><span className="font-bold">Sub Episodes:</span> {info?.stats.episodes.sub}</p>
+                                <p><span className="font-bold">SUB Episodes:</span> {info?.stats.episodes.sub}</p>
+                                <p><span className="font-bold">DUB Episodes:</span> {info?.stats.episodes.dub ?? 0}</p>
                             </div>
                             <p className="text-sm leading-relaxed">
                                 {showMore ? info?.description : info?.description?.substring(0, 450) + (info?.description?.length > 450 ? '...' : '')}

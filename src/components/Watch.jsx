@@ -7,7 +7,7 @@ import Loader from './screens/Loader';
 import AuthContext from '../context/authContext';
 import axios from "axios";
 
-const baseUrl = 'https://jvbarcenas.tech/api';
+const baseUrl = 'https://jvbarcenas.tech/api/v2';
 
 export default function Watch() {
   const { episodeId } = useParams();
@@ -22,7 +22,7 @@ export default function Watch() {
   const playerRef = useRef(null);
   const [loading, setLoading] = useState(true);
 
-  // Autoskip & User Config
+  //* Autoskip & User Config
   const { config, watchedTime } = useContext(AuthContext);
   const [autoskip, setAutoskip] = useState(null);
   const [duration, setDuration] = useState(null);
@@ -62,9 +62,10 @@ export default function Watch() {
 
   const getDuration = async (episodeId) => {
     try {
-      const response = await fetch(`${baseUrl}/anime/info?id=${episodeId}`);
+      const response = await fetch(`${baseUrl}/hianime/anime/${episodeId}`);
       if (!response.ok) throw new Error('Failed to fetch data');
-      const data = await response.json();
+      const result = await response.json();
+      const data = result.data;
       // console.log('API response data:', data); // Debugging line
       const duration = data.anime?.info?.stats?.duration;
       if (duration) {
@@ -87,9 +88,11 @@ export default function Watch() {
 
   const getEpisodes = async (fullEpisodeId) => {
     try {
-      const response = await fetch(`${baseUrl}/anime/episode-srcs?id=${fullEpisodeId}`);
+      const response = await fetch(`${baseUrl}/hianime/episode/sources?animeEpisodeId=${fullEpisodeId}`);
       if (!response.ok) throw new Error('Failed to fetch data');
-      const data = await response.json();
+      const result = await response.json();
+      const data = result.data;
+       console.log('API response data:', data); // Debugging line
       if (data.sources && data.sources.length > 0) setVideoUrl(data.sources[0].url);
       const englishTrack = data.tracks.find(track => track.label === 'English' && track.kind === 'captions');
       if (englishTrack) setEnglishSubtitle(englishTrack.file);

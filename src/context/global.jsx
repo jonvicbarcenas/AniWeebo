@@ -2,7 +2,7 @@ import React, { createContext, useContext, useEffect, useReducer, useState} from
 
 const GlobalContext = createContext();
 
-const baseUrl = 'https://jvbarcenas.tech/api'
+const baseUrl = 'https://jvbarcenas.tech/api/v2'
 
 //actions
 const LOADING = "LOADING";
@@ -73,29 +73,28 @@ export const GlobalContextProvider = ({children}) => {
         //TODO search anime
         const searchAnime = async (anime) => {
             dispatch({type: LOADING})
-            const response = await fetch(`${baseUrl}/anime/search?q=${anime}`)
-            const data = await response.json();
-            // console.log(data.data)
+            const response = await fetch(`${baseUrl}/hianime/search?q=${anime}`)
+            const result = await response.json();
+            const data = result.data;
             dispatch({type: SEARCH, payload: data.animes}) 
         }
-
-        //* fetch popular anime
+        
         const gethPopularAnime = async () => {
             dispatch({type: LOADING})
-            const response = await fetch(`${baseUrl}/anime/home`)
-            const data = await response.json();
-            // console.log(data.data)
+            const response = await fetch(`${baseUrl}/hianime/home`)
+            const result = await response.json();
+            const data = result.data;
             dispatch({type: 'GET_POPULAR_ANIME', payload: data.spotlightAnimes}) 
         }
-
+        
         const getTrendingAnime = async () => {
             dispatch({type: LOADING})
-            const response = await fetch(`${baseUrl}/anime/home`)
-            const data = await response.json();
-            // console.log(data.data)
-            dispatch({type: 'GET_TRENDING_ANIME', payload: data.trendingAnimes}) 
-        }
-        
+            const response = await fetch(`${baseUrl}/hianime/home`);
+            const result = await response.json();
+            const data = result.data; // Extract the data object
+            dispatch({type: GET_TRENDING_ANIME, payload: data.trendingAnimes});
+        } 
+          
 
 
     //initial render
