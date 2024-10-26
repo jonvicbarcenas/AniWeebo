@@ -6,6 +6,7 @@ import Anilist from './watch-support/Anilist';
 import Loader from './screens/Loader';
 import AuthContext from '../context/authContext';
 import axios from "axios";
+import AniDescription from './watch-support/anidescription';
 
 const baseUrl = 'https://jvbarcenas.tech/api/v2';
 
@@ -260,31 +261,7 @@ export default function Watch() {
                 </div>
               </div>
 
-              <div className="bg-gray-900 rounded-lg p-6 shadow-lg">
-                <div className="flex flex-col sm:flex-row gap-6">
-                  <img
-                    src="/path-to-anime-image.jpg"
-                    alt="Anime Cover"
-                    className="w-24 h-36 object-cover rounded-lg shadow-md"
-                  />
-                  <div className="space-y-3">
-                    <h2 className="text-2xl font-bold">Anime Title</h2>
-                    <div className="flex flex-wrap gap-2">
-                      <span className="bg-gray-800 px-2 py-1 rounded-full text-xs font-medium">PG-13</span>
-                      <span className="bg-purple-700 px-2 py-1 rounded-full text-xs font-medium">HD</span>
-                      <span className="bg-green-700 px-2 py-1 rounded-full text-xs font-medium">CC 3</span>
-                      <span className="text-gray-400 text-sm">23 • TV • 22m</span>
-                    </div>
-                    <p className="text-sm text-gray-400">
-                      TITLE ANIME nisi nisi eu commodo aliquip aliquip excepteur exercitation. (2023)
-                    </p>
-                    <p className="text-sm leading-relaxed">
-                      jvbarcenas tech is awesome to watch chuchu chu Voluptate eu quis velit mollit dolor anim ut officia
-                      dolore reprehenderit sit.
-                    </p>
-                  </div>
-                </div>
-              </div>
+              <AniDescription episodeId={episodeId} />
             </div>
 
             <div className="w-full lg:w-1/4 mt-6 lg:mt-0">
