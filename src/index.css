@@ -52,6 +52,15 @@ h1 {
   line-height: 1.1 !important;
 }
 
+.swiper-button-next, .swiper-button-prev {
+  color: #ec4899 !important; /* Pink color */
+}
+
+.swiper-button-next:hover, .swiper-button-prev:hover {
+  color: #d9468f !important; /* Darker pink for hover effect */
+}
+
+
 button {
   border-radius: 8px;
   border: 1px solid transparent;

@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import Artplayer from 'artplayer';
 import Hls from 'hls.js';
 
-const VideoPlayer = ({ source }) => {
+const VideoPlayer = ({ source, subtitle }) => {
     const artRef = useRef(null);
 
     useEffect(() => {
@@ -31,22 +31,26 @@ const VideoPlayer = ({ source }) => {
                 theme: '#800080',
                 highlight: [
                     {
-                        time: 60, // Start time at 1:00
+                        time: 60, 
                         text: 'Highlight Segment',
-                        color: 'purple', // Set the highlight color
+                        color: 'purple', 
                     },
                     {
-                        time: 120, // End time at 2:00
+                        time: 120, 
                         text: 'End of Segment',
                     },
                 ],
+                subtitle: {
+                    url: subtitle,
+                    type: 'vtt', // Assuming the subtitle is in VTT format
+                    style: {
+                        color: '#fff', // Subtitle text color
+                        fontSize: '20px', // Subtitle text size
+                    },
+                },
             });
-
-            return () => {
-                art.destroy();
-            };
         }
-    }, [source]);
+    }, [source, subtitle]);
 
     return <div ref={artRef} style={{ width: '100%', height: '500px' }} />;
 };

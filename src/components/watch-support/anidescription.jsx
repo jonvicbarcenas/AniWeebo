@@ -4,12 +4,10 @@ const baseUrl = 'https://jvbarcenas.tech/api/v2/hianime';
 
 export default function AniDescription({ episodeId }) {
   const [anime, setAnime] = useState({});
-  console.log("anime id: ", episodeId);
 
   const getAnime = async (episodeId) => {
     const response = await fetch(`${baseUrl}/anime/${episodeId}`);
     const res = await response.json();
-    console.log("anime data: ", res.data.anime.info);
     setAnime(res.data.anime.info);
   };
 
