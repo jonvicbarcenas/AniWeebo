@@ -8,7 +8,7 @@ import SignupForm from './Forms/SignupForm'
 import LoginForm from './Forms/LoginForm'
 import Dashboard from './Forms/Dashboard'
 import { AccountPage } from './Forms/account-page'
-import Enhanced404Page from './enhanced-404-page'
+import Enhanced404Page from './screens/enhanced-404-page'
 
 function App() {
   return (

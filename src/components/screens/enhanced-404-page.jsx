@@ -1,8 +1,8 @@
 'use client'
 
 import { Button } from '@mui/material'
-import Particles from './ui/particles'
-import PlanetEarth from '../assets/planet-earth.svg'
+import Particles from '../ui/particles'
+import PlanetEarth from '../../assets/planet-earth.svg'
 
 export default function Enhanced404Page() {
 

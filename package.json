@@ -28,7 +28,6 @@
     "hls.js": "^1.5.17",
     "lucide-react": "^0.447.0",
     "node-sass": "^9.0.0",
-    "plyr": "^3.7.8",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-hot-toast": "^2.4.1",
@@ -42,6 +41,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.9.0",
+    "@types/fscreen": "^1.0.4",
     "@types/node": "^22.7.5",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
