@@ -6,7 +6,6 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import { format, addDays, startOfMonth, endOfMonth, isSameDay } from 'date-fns';
 import { Link } from 'react-router-dom'
-import { Padding } from '@mui/icons-material';
 
 
 const baseUrl = 'https://jvbarcenas.tech/api/v2/hianime';
