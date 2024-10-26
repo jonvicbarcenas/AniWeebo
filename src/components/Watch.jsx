@@ -92,9 +92,11 @@ export default function Watch() {
       const result = await response.json();
       const data = result.data;
        console.log('API response data:', data); // Debugging line
-      if (data.sources && data.sources.length > 0) setVideoUrl(data.sources[0].url);
+      if (data.sources && data.sources.length > 0)
+          setVideoUrl(data.sources[0].url);
       const englishTrack = data.tracks.find(track => track.label === 'English' && track.kind === 'captions');
-      if (englishTrack) setEnglishSubtitle(englishTrack.file);
+      if (englishTrack) 
+          setEnglishSubtitle(englishTrack.file);
       setEpisode(data);
     } catch (error) {
       console.error('Error fetching episode data:', error);
@@ -109,13 +111,22 @@ export default function Watch() {
     if (playerRef.current && episode?.tracks) {
       const videoElement = playerRef.current.getInternalPlayer();
       if (videoElement) {
-        // Clear existing tracks before adding new ones
         const existingTracks = videoElement.querySelectorAll('track');
         existingTracks.forEach((track) => videoElement.removeChild(track));
 
-        // Add tracks from episode data
+        // Add English subtitles if available
+        if (englishSubtitle) {
+          const track = document.createElement('track');
+          track.kind = 'captions';
+          track.label = 'English';
+          track.srclang = 'en';
+          track.src = englishSubtitle;
+          track.default = true;
+          videoElement.appendChild(track);
+        }
+        
         episode.tracks
-          .filter(track => track.kind === 'captions')
+          .filter(track => track.kind === 'captions' && track.label !== 'English')
           .forEach(trackData => {
             const track = document.createElement('track');
             track.kind = trackData.kind;
