@@ -5,6 +5,7 @@ import './Homepage.css';
 import TrendingView from './Popular-carousel/TrendingView';
 import Loader from './screens/Loader';
 import ScheduleComponent from './Schedule/Schedule';
+import ContinueWatching from './ContinueWatching/ContinueWatching';
 
 export default function Homepage() {
     const { popularAnime, trendingAnime } = useGlobalContext();
@@ -32,6 +33,7 @@ export default function Homepage() {
                         <Card anime={popularAnime} className="popular-card" />
                         <TrendingView anime={trendingAnime} />
                         <ScheduleComponent/>
+                        <ContinueWatching/>
                     </>
                 )}
             </div>

@@ -26,24 +26,75 @@ export default function Watch() {
   //* Autoskip & User Config
   const { config, watchedTime } = useContext(AuthContext);
   const [autoskip, setAutoskip] = useState(null);
-  const [duration, setDuration] = useState(null);
+  const [animeData, setAnimeData] = useState(null);
+  const [episodeNumber, setEpisodeNumber] = useState();
 
   //* STATE VARIABLE for sending the id, episode, and time to the server for tracking
   const [progress, setProgress] = useState(0);
 
-  async function updateWatchedEpisode(episodeId, episodeParam, progress) {
+    // console.log("Anime Data:", animeData);
+
+    const payload = animeData ? {
+      id: episodeId, 
+      name: animeData.name,
+      duration: animeData.stats?.duration,
+      poster: animeData.poster,
+      stats: {
+          rating: animeData.stats?.rating,
+          quality: animeData.stats?.quality,
+          cc: {
+              sub: animeData.stats?.episodes?.sub,
+              dub: animeData.stats?.episodes?.dub || 0
+          }
+      },
+      episodes: [
+          {
+              episodeNumber: episodeNumber?.number,
+              episodeTitle: episodeNumber?.title,
+              episodeId: episodeParam.toString(),
+              fullEpisodeParams: fullEpisodeId,
+              time: progress
+          }
+      ]
+    } : null;
+
+    // console.log('Payload:', payload);
+    // console.log('epsiode num:', episodeNumber.number);
+
+    const getEpisodeNumber = async (animeId) => {
+      const response = await fetch(`${baseUrl}/hianime/anime/${animeId}/episodes`);
+      const res = await response.json();
+      const data = res.data.episodes;
+      const episode = data.find(episode => episode.episodeId === fullEpisodeId);
+      setEpisodeNumber(episode);
+
+    }
+
+   async function updateWatchedEpisode(payload, progress) {
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500)); // Delay for 1.5 seconds
-      const response = await axios.post(`${axios.defaults.serverURL}/auth/profile/watched`, {
-        id: episodeId,
-        episode: episodeParam,
-        time: progress,
-      });
-      console.log('Episode updated successfully:', response.data);
+        await new Promise(resolve => setTimeout(resolve, 1500)); // Delay for 1.5 seconds
+        const response = await axios.post(`${axios.defaults.serverURL}/auth/profile/watched`, payload);
+
+        // console.log('Episode updated successfully:', response.data);
     } catch (error) {
-      console.error('Error updating episode:', error);
+        console.error('Error updating episode:', error);
     }
   }
+
+  const getAnimeData = async (episodeId) => {
+    try {
+        const response = await fetch(`${baseUrl}/hianime/anime/${episodeId}`);
+        if (!response.ok) throw new Error('Failed to fetch data');
+        const result = await response.json();
+        
+        // Set animeData directly to result.data
+        setAnimeData(result.data?.anime?.info); 
+
+    } catch (error) {
+        console.error('Error fetching episode data:', error);
+    }
+  };
+
 
   useEffect(() => {
     if (config) {
@@ -61,28 +112,9 @@ export default function Watch() {
     }
   }, [episode, episodeId, episodeParam, watchedTime]);
 
-  const getDuration = async (episodeId) => {
-    try {
-      const response = await fetch(`${baseUrl}/hianime/anime/${episodeId}`);
-      if (!response.ok) throw new Error('Failed to fetch data');
-      const result = await response.json();
-      const data = result.data;
-      const duration = data.anime?.info?.stats?.duration;
-      if (duration) {
-        const durationInSeconds = duration.endsWith('m')
-          ? parseInt(duration) * 60
-          : parseInt(duration);
-        setDuration(durationInSeconds);
-      } else {
-        throw new Error('Duration not found in response');
-      }
-    } catch (error) {
-      console.error('Error fetching episode data:', error);
-    }
-  };
-
   useEffect(() => {
-    if (episodeParam) getDuration(episodeId);
+    if (episodeParam) getAnimeData(episodeId);
+    getEpisodeNumber(episodeId);
   }, [episodeParam, episodeId]);
 
   const getEpisodes = async (fullEpisodeId) => {
@@ -91,7 +123,7 @@ export default function Watch() {
       if (!response.ok) throw new Error('Failed to fetch data');
       const result = await response.json();
       const data = result.data;
-       console.log('API response data:', data); // Debugging line
+      //  console.log('API response data:', data); // Debugging line
       if (data.sources && data.sources.length > 0)
           setVideoUrl(data.sources[0].url);
       const englishTrack = data.tracks.find(track => track.label === 'English' && track.kind === 'captions');
@@ -154,7 +186,7 @@ export default function Watch() {
     // Update watched episode in real-time
 
     if (progress.playedSeconds >= 60) {
-      updateWatchedEpisode(episodeId, episodeParam, progress.playedSeconds);
+      updateWatchedEpisode(payload, progress.playedSeconds);
     }
   };
 
