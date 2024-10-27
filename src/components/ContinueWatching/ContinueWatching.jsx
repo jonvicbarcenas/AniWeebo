@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom'
 
 const ContinueWatching = () => {
   const { watchedTime, loggedIn } = useContext(AuthContext);
-  const data = watchedTime || []; // Ensure data is an array
+  const data = watchedTime || []; 
 
   console.log(data);
   
@@ -31,10 +31,10 @@ const ContinueWatching = () => {
   }
 
   return (
-    <div className="bg-slate-900 p-6">
+    <div className="p-6">
       <div className="flex justify-between items-center mb-4">
         <div className="flex items-center gap-2">
-          <Clock className="w-5 h-5 text-pink-500" />
+          <Clock className="w-5 h-5 text-slate-400" />
           <h2 className="text-white text-xl font-semibold">Continue Watching</h2>
         </div>
         {/* <p className="flex items-center text-gray-400 hover:text-white">
