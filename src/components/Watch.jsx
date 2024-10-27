@@ -107,8 +107,8 @@ export default function Watch() {
       setLoading(false);
 
       // Log the episode details related to the intro
-      console.log('Intro start:', episode?.intro?.start);
-      console.log('Intro end:', episode?.intro?.end);
+      // console.log('Intro start:', episode?.intro?.start);
+      // console.log('Intro end:', episode?.intro?.end);
     }
   }, [episode, episodeId, episodeParam, watchedTime]);
 
@@ -207,14 +207,15 @@ export default function Watch() {
   const [hasPlayed, setHasPlayed] = useState(false);
   const handlePlay = () => {
     if (!hasPlayed) {
-      console.log('episodeId:', episodeId);
-      console.log('episodeParam:', episodeParam);
+      // console.log('episodeId:', episodeId);
+      // console.log('episodeParam:', episodeParam);
 
-      const watchedAnime = watchedTime?.find(anime => anime.id === episodeId);
-      console.log('watchedAnime:', watchedAnime);
+      const watchedAnime = watchedTime?.find(ep => ep.id === episodeId);
 
-      const watchedEpisode = watchedAnime?.episodes?.find(ep => ep.episode === parseInt(episodeParam, 10));
-      console.log('watchedEpisode:', watchedEpisode);
+      // console.log('watchedAnime:', watchedAnime);
+
+      const watchedEpisode = watchedAnime?.episodes?.find(ep => ep.episodeId === episodeParam);
+      // console.log('watchedEpisode:', watchedEpisode);
 
       if (watchedEpisode) {
         console.log(`Seeking to time: ${watchedEpisode.time}`);

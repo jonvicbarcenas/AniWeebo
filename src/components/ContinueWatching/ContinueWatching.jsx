@@ -2,12 +2,14 @@ import { useContext } from 'react';
 import { Clock, ChevronRight } from 'lucide-react';
 import AuthContext from '../../context/authContext';
 import MyLottieAnimation from '../screens/MyLottieAnimation';
+import { Link } from 'react-router-dom'
+
 
 const ContinueWatching = () => {
   const { watchedTime, loggedIn } = useContext(AuthContext);
   const data = watchedTime || []; // Ensure data is an array
 
-  console.log(loggedIn);
+  console.log(data);
   
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
@@ -35,10 +37,10 @@ const ContinueWatching = () => {
           <Clock className="w-5 h-5 text-pink-500" />
           <h2 className="text-white text-xl font-semibold">Continue Watching</h2>
         </div>
-        <button className="flex items-center text-gray-400 hover:text-white">
+        {/* <p className="flex items-center text-gray-400 hover:text-white">
           View more
           <ChevronRight className="w-4 h-4 ml-1" />
-        </button>
+        </p> */}
       </div>
 
       {data.length === 0 ? (
@@ -53,6 +55,7 @@ const ContinueWatching = () => {
 
             return (
               <div key={anime._id} className="relative group">
+                <Link to={`/anime/watch/${lastEpisode.fullEpisodeParams}`} className="block">
                 <div className="relative">
                   <img
                     src={anime.poster}
@@ -91,6 +94,7 @@ const ContinueWatching = () => {
                     <span>{formatTime(lastEpisode.time)} / {formatDuration(anime.duration)}</span>
                   </div>
                 </div>
+                </Link>
               </div>
             );
           })}
