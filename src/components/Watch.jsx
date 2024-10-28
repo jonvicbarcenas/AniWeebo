@@ -8,6 +8,13 @@ import AuthContext from '../context/authContext';
 import axios from "axios";
 import AniDescription from './watch-support/anidescription';
 
+//* vidstack like plyr
+import '@vidstack/react/player/styles/base.css';
+import '@vidstack/react/player/styles/plyr/theme.css';
+import { MediaPlayer, MediaProvider } from '@vidstack/react';
+import { PlyrLayout, plyrLayoutIcons } from '@vidstack/react/player/layouts/plyr';
+import { Track } from "@vidstack/react";
+
 const baseUrl = 'https://jvbarcenas.tech/api/v2';
 
 export default function Watch() {
@@ -32,66 +39,66 @@ export default function Watch() {
   //* STATE VARIABLE for sending the id, episode, and time to the server for tracking
   const [progress, setProgress] = useState(0);
 
-    // console.log("Anime Data:", animeData);
+  // console.log("Anime Data:", animeData);
 
-    const payload = animeData ? {
-      id: episodeId, 
-      name: animeData.name,
-      duration: animeData.stats?.duration,
-      poster: animeData.poster,
-      stats: {
-          rating: animeData.stats?.rating,
-          quality: animeData.stats?.quality,
-          cc: {
-              sub: animeData.stats?.episodes?.sub,
-              dub: animeData.stats?.episodes?.dub || 0
-          }
-      },
-      episodes: [
-          {
-              episodeNumber: episodeNumber?.number,
-              episodeTitle: episodeNumber?.title,
-              episodeId: episodeParam.toString(),
-              fullEpisodeParams: fullEpisodeId,
-              time: progress
-          }
-      ]
-    } : null;
+  const payload = animeData ? {
+    id: episodeId,
+    name: animeData.name,
+    duration: animeData.stats?.duration,
+    poster: animeData.poster,
+    stats: {
+      rating: animeData.stats?.rating,
+      quality: animeData.stats?.quality,
+      cc: {
+        sub: animeData.stats?.episodes?.sub,
+        dub: animeData.stats?.episodes?.dub || 0
+      }
+    },
+    episodes: [
+      {
+        episodeNumber: episodeNumber?.number,
+        episodeTitle: episodeNumber?.title,
+        episodeId: episodeParam.toString(),
+        fullEpisodeParams: fullEpisodeId,
+        time: progress
+      }
+    ]
+  } : null;
 
-    // console.log('Payload:', payload);
-    // console.log('epsiode num:', episodeNumber.number);
+  // console.log('Payload:', payload);
+  // console.log('epsiode num:', episodeNumber.number);
 
-    const getEpisodeNumber = async (animeId) => {
-      const response = await fetch(`${baseUrl}/hianime/anime/${animeId}/episodes`);
-      const res = await response.json();
-      const data = res.data.episodes;
-      const episode = data.find(episode => episode.episodeId === fullEpisodeId);
-      setEpisodeNumber(episode);
+  const getEpisodeNumber = async (animeId) => {
+    const response = await fetch(`${baseUrl}/hianime/anime/${animeId}/episodes`);
+    const res = await response.json();
+    const data = res.data.episodes;
+    const episode = data.find(episode => episode.episodeId === fullEpisodeId);
+    setEpisodeNumber(episode);
 
-    }
+  }
 
-   async function updateWatchedEpisode(payload, progress) {
+  async function updateWatchedEpisode(payload, progress) {
     try {
-        await new Promise(resolve => setTimeout(resolve, 1500)); // Delay for 1.5 seconds
-        const response = await axios.post(`${axios.defaults.serverURL}/auth/profile/watched`, payload);
+      await new Promise(resolve => setTimeout(resolve, 1500)); // Delay for 1.5 seconds
+      const response = await axios.post(`${axios.defaults.serverURL}/auth/profile/watched`, payload);
 
-        // console.log('Episode updated successfully:', response.data);
+      // console.log('Episode updated successfully:', response.data);
     } catch (error) {
-        console.error('Error updating episode:', error);
+      console.error('Error updating episode:', error);
     }
   }
 
   const getAnimeData = async (episodeId) => {
     try {
-        const response = await fetch(`${baseUrl}/hianime/anime/${episodeId}`);
-        if (!response.ok) throw new Error('Failed to fetch data');
-        const result = await response.json();
-        
-        // Set animeData directly to result.data
-        setAnimeData(result.data?.anime?.info); 
+      const response = await fetch(`${baseUrl}/hianime/anime/${episodeId}`);
+      if (!response.ok) throw new Error('Failed to fetch data');
+      const result = await response.json();
+
+      // Set animeData directly to result.data
+      setAnimeData(result.data?.anime?.info);
 
     } catch (error) {
-        console.error('Error fetching episode data:', error);
+      console.error('Error fetching episode data:', error);
     }
   };
 
@@ -125,10 +132,10 @@ export default function Watch() {
       const data = result.data;
       //  console.log('API response data:', data); // Debugging line
       if (data.sources && data.sources.length > 0)
-          setVideoUrl(data.sources[0].url);
+        setVideoUrl(data.sources[0].url);
       const englishTrack = data.tracks.find(track => track.label === 'English' && track.kind === 'captions');
-      if (englishTrack) 
-          setEnglishSubtitle(englishTrack.file);
+      if (englishTrack)
+        setEnglishSubtitle(englishTrack.file);
       setEpisode(data);
     } catch (error) {
       console.error('Error fetching episode data:', error);
@@ -139,38 +146,42 @@ export default function Watch() {
     if (episodeParam) getEpisodes(fullEpisodeId);
   }, [fullEpisodeId, episodeParam]);
 
-  const handlePlayerReady = () => {
-    if (playerRef.current && episode?.tracks) {
-      const videoElement = playerRef.current.getInternalPlayer();
-      if (videoElement) {
-        const existingTracks = videoElement.querySelectorAll('track');
-        existingTracks.forEach((track) => videoElement.removeChild(track));
-
-        // Add English subtitles if available
-        if (englishSubtitle) {
-          const track = document.createElement('track');
-          track.kind = 'captions';
-          track.label = 'English';
-          track.srclang = 'en';
-          track.src = englishSubtitle;
-          track.default = true;
-          videoElement.appendChild(track);
-        }
-        
-        episode.tracks
-          .filter(track => track.kind === 'captions' && track.label !== 'English')
-          .forEach(trackData => {
-            const track = document.createElement('track');
-            track.kind = trackData.kind;
-            track.label = trackData.label;
-            track.srclang = trackData.label.toLowerCase();
-            track.src = trackData.file;
-            track.default = trackData.default || false;
-            videoElement.appendChild(track);
-          });
-      }
-    }
+  const handleReady = () => {
+    setVideoUrl("https://mmd.biananset.net/_v7/cd914ffc0cb17d4af1017fa6c1a9cd6d4db33887d1f03f2af365496646f8dfc442c671a686d1b459eb0ffe7b4b795eee172a232f946a2d93b3d5f0873c3137bbf632cfcb0602e96f3ad6ab9187dcb737b5449ba9ef6b2d870c3c4beadc4e0aac13d8d2b165de94c873794b42136609bf22e530c3887d0e336be062f224eb7e29/master.m3u8");
   };
+
+  // const handlePlayerReady = () => {
+  //   if (playerRef.current && episode?.tracks) {
+  //     const videoElement = playerRef.current.getInternalPlayer();
+  //     if (videoElement) {
+  //       const existingTracks = videoElement.querySelectorAll('track');
+  //       existingTracks.forEach((track) => videoElement.removeChild(track));
+
+  //       // Add English subtitles if available
+  //       if (englishSubtitle) {
+  //         const track = document.createElement('track');
+  //         track.kind = 'captions';
+  //         track.label = 'English';
+  //         track.srclang = 'en';
+  //         track.src = englishSubtitle;
+  //         track.default = true;
+  //         videoElement.appendChild(track);
+  //       }
+
+  //       episode.tracks
+  //         .filter(track => track.kind === 'captions' && track.label !== 'English')
+  //         .forEach(trackData => {
+  //           const track = document.createElement('track');
+  //           track.kind = trackData.kind;
+  //           track.label = trackData.label;
+  //           track.srclang = trackData.label.toLowerCase();
+  //           track.src = trackData.file;
+  //           track.default = trackData.default || false;
+  //           videoElement.appendChild(track);
+  //         });
+  //     }
+  //   }
+  // };
 
   const handleVideoProgress = (progress) => {
     const introStart = episode?.intro?.start || 0;
@@ -241,25 +252,20 @@ export default function Watch() {
             <div className="w-full lg:w-3/4 space-y-6">
               <div className="relative aspect-video bg-gray-900 rounded-lg overflow-hidden shadow-lg">
                 {videoUrl ? (
-                  <ReactPlayer
-                    ref={playerRef}
-                    className={`react-player-container ${autoskip ? 'ring-2 ring-blue-500' : ''}`}
-                    url={videoUrl}
-                    width="100%"
-                    height="100%"
-                    controls
-                    onReady={handlePlayerReady}
-                    onProgress={handleVideoProgress}
-                    onPlay={() => handlePlay(progress)}
-                    muted={isMuted}
-                    config={{
-                      file: {
-                        attributes: {
-                          crossOrigin: "anonymous",
-                        },
-                      },
-                    }}
-                  />
+                  <MediaPlayer title="Sprite Fight" 
+                    src={videoUrl}
+                    load='eager'
+                  >
+                    <MediaProvider/>
+                    <Track
+                      src= {englishSubtitle}
+                      kind="subtitles"
+                      label="English"
+                      lang="en-US"
+                      default
+                    />
+                    <PlyrLayout thumbnails="https://s.megastatics.com/subtitle/dc13e106ce815098ee70a00760ea916d/eng-2.vtt" icons={plyrLayoutIcons} />
+                  </MediaPlayer>
                 ) : (
                   <div className="flex items-center justify-center h-full">
                     <Play className="w-16 h-16 text-gray-600" />
@@ -289,11 +295,10 @@ export default function Watch() {
                     </button>
                   ))}
                   <button
-                    className={`px-3 py-1 rounded-full text-sm border ${
-                      autoskip
+                    className={`px-3 py-1 rounded-full text-sm border ${autoskip
                         ? "border-green-500 text-green-500 hover:bg-green-500 hover:text-gray-900"
                         : "border-red-500 text-red-500 hover:bg-red-500 hover:text-gray-900"
-                    } transition-colors duration-200`}
+                      } transition-colors duration-200`}
                     onClick={toggleAutoskip}
                   >
                     {autoskip ? "Skip Intro On" : "Skip Intro Off"}

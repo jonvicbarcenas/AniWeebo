@@ -1,58 +1,27 @@
-import React, { useEffect, useRef } from 'react';
-import Artplayer from 'artplayer';
-import Hls from 'hls.js';
+import '@vidstack/react/player/styles/base.css';
+import '@vidstack/react/player/styles/plyr/theme.css';
+import { MediaPlayer, MediaProvider } from '@vidstack/react';
+import { PlyrLayout, plyrLayoutIcons } from '@vidstack/react/player/layouts/plyr';
+import { Track } from "@vidstack/react";
 
-const VideoPlayer = ({ source, subtitle }) => {
-    const artRef = useRef(null);
-
-    useEffect(() => {
-        if (artRef.current) {
-            const art = new Artplayer({
-                container: artRef.current,
-                url: source,
-                type: 'm3u8',
-                customType: {
-                    m3u8: (video, url) => {
-                        if (Hls.isSupported()) {
-                            const hls = new Hls();
-                            hls.loadSource(url);
-                            hls.attachMedia(video);
-                        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                            video.src = url;
-                        }
-                    },
-                },
-                autoplay: true,
-                volume: 0.7,
-                pip: true,
-                autoOrientation: true,
-                setting: true,
-                playbackRate: true,
-                theme: '#800080',
-                highlight: [
-                    {
-                        time: 60, 
-                        text: 'Highlight Segment',
-                        color: 'purple', 
-                    },
-                    {
-                        time: 120, 
-                        text: 'End of Segment',
-                    },
-                ],
-                subtitle: {
-                    url: subtitle,
-                    type: 'vtt', // Assuming the subtitle is in VTT format
-                    style: {
-                        color: '#fff', // Subtitle text color
-                        fontSize: '20px', // Subtitle text size
-                    },
-                },
-            });
-        }
-    }, [source, subtitle]);
-
-    return <div ref={artRef} style={{ width: '100%', height: '500px' }} />;
+const Vidstack = () => {
+    return (
+        <>
+            <div>
+                <MediaPlayer title="Sprite Fight" src="https://mmd.biananset.net/_v7/cd914ffc0cb17d4af1017fa6c1a9cd6d4db33887d1f03f2af365496646f8dfc442c671a686d1b459eb0ffe7b4b795eee172a232f946a2d93b3d5f0873c3137bbf632cfcb0602e96f3ad6ab9187dcb737b5449ba9ef6b2d870c3c4beadc4e0aac13d8d2b165de94c873794b42136609bf22e530c3887d0e336be062f224eb7e29/master.m3u8">
+                    <MediaProvider />
+                    <Track
+                        src="https://s.megastatics.com/subtitle/dc13e106ce815098ee70a00760ea916d/eng-2.vtt"
+                        kind="subtitles"
+                        label="English"
+                        lang="en-US"
+                        default
+                    />
+                    <PlyrLayout thumbnails="https://s.megastatics.com/subtitle/dc13e106ce815098ee70a00760ea916d/eng-2.vtt" icons={plyrLayoutIcons} />
+                </MediaPlayer>
+            </div>
+        </>
+    );
 };
 
-export default VideoPlayer;
+export default Vidstack;
