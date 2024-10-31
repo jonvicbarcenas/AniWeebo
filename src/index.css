@@ -158,3 +158,6 @@ button:focus-visible {
   }
 }
 
+.plyr .plyr__slider {
+  color:#747bff ; /* Change this to your desired highlight color add !important to enable */
+}

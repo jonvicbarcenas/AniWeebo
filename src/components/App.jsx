@@ -9,6 +9,7 @@ import LoginForm from './Forms/LoginForm'
 import Dashboard from './Forms/Dashboard'
 import { AccountPage } from './Forms/account-page'
 import Enhanced404Page from './screens/enhanced-404-page'
+import Testjv from './screens/Testing'
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
             <Route path="/login" element={<LoginForm/>} />
             <Route path="/dashboard" element={<Dashboard/>} />
             <Route path="/account" element={<AccountPage/>} />
+            <Route path="/test" element={<Testjv/>} />
             <Route path="*" element={<Enhanced404Page/>} />
         </Routes>
     </BrowserRouter>
