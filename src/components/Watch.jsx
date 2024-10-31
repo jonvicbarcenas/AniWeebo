@@ -153,14 +153,14 @@ export default function Watch() {
         const introStart = episode?.intro?.start || 0;
         const introEnd = episode?.intro?.end || 0;
 
+        if (autoskip && currentTime >= introStart && currentTime <= introEnd) {
+            remote.seek(introEnd);
+            console.log('Skipping intro to:', introEnd);
+        }
+
         if (currentTime - lastUpdateTimeRef.current >= 5) {
             setProgress(currentTime);
             lastUpdateTimeRef.current = currentTime;
-
-            if (autoskip && currentTime >= introStart && currentTime <= introEnd) {
-                remote.seek(introEnd);
-                console.log('Skipping intro to:', introEnd);
-            }
 
             if (currentTime >= 30) {
                 updateWatchedEpisode(payload, currentTime);
