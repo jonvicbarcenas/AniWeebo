@@ -29,7 +29,6 @@ export default function Watch() {
     const playerRef = useRef(null);
     const remote = useMediaRemote(playerRef);
 
-
     //* Autoskip & User Config
     const { config, watchedTime } = useContext(AuthContext);
     const [autoskip, setAutoskip] = useState(null);
@@ -234,6 +233,8 @@ export default function Watch() {
                                         aspectRatio="16/9"
                                         onTimeUpdate={handleVideoProgress}
                                         onPlay={handlePlay}
+                                        playsInline
+                                        clickToPlay={true}
                                     >
                                         <MediaProvider />
                                         {episode?.tracks?.map((trackData, index) => (
@@ -247,8 +248,9 @@ export default function Watch() {
                                             />
                                         ))}
                                         <PlyrLayout 
+                                            invertTime={false}
                                             markers={markers}
-                                            icons={plyrLayoutIcons} 
+                                            icons={plyrLayoutIcons}
                                         />
                                     </MediaPlayer>
                                 ) : (
