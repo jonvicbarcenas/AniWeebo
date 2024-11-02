@@ -8,11 +8,13 @@ import axios from "axios";
 import AniDescription from './watch-support/anidescription';
 
 //* vidstack like plyr
-import '@vidstack/react/player/styles/base.css';
-import '@vidstack/react/player/styles/plyr/theme.css';
-import { MediaPlayer, MediaProvider, useMediaRemote} from '@vidstack/react';
-import { PlyrLayout, plyrLayoutIcons } from '@vidstack/react/player/layouts/plyr';
-import { Track } from "@vidstack/react";
+import { MediaPlayer, MediaProvider, useMediaRemote, Track } from '@vidstack/react';
+import {
+    DefaultAudioLayout,
+    defaultLayoutIcons,
+    DefaultVideoLayout,
+} from '@vidstack/react/player/layouts/default';
+import './watch-support/player.css';
 
 const baseUrl = 'https://jvbarcenas.tech/api/v2';
 
@@ -81,7 +83,7 @@ export default function Watch() {
             await new Promise(resolve => setTimeout(resolve, 1500)); // Delay for 1.5 seconds
             const response = await axios.post(`${axios.defaults.serverURL}/auth/profile/watched`, payload);
 
-            // console.log('Episode updated successfully:', response.data);
+            console.log('Episode updated successfully:', response.data);
         } catch (error) {
             console.error('Error updating episode:', error);
         }
@@ -143,9 +145,6 @@ export default function Watch() {
         if (episodeParam) getEpisodes(fullEpisodeId);
     }, [fullEpisodeId, episodeParam]);
 
-
-
-    
     const lastUpdateTimeRef = useRef(0);
     const handleVideoProgress = (event) => {
         const currentTime = event?.currentTime;
@@ -206,6 +205,8 @@ export default function Watch() {
         }
     };
 
+    // console.log('subs:', episode?.tracks);
+
     const introStart = episode?.intro?.start || 0;
     const introEnd = episode?.intro?.end || 0;
     const markers = [
@@ -223,18 +224,20 @@ export default function Watch() {
                 <div className="container mx-auto px-4 py-8">
                     <div className="flex flex-col lg:flex-row lg:space-x-8">
                         <div className="w-full lg:w-3/4 space-y-6">
-                            <div className="relative aspect-video bg-gray-900 rounded-lg overflow-hidden shadow-lg">
+                            <div
+                                className="relative aspect-video bg-gray-900 rounded-lg overflow-hidden shadow-lg"
+                            >
                                 {videoUrl ? (
-                                    <MediaPlayer 
+                                    <MediaPlayer
+                                        className="player"
                                         ref={playerRef}
-                                        title="Video Player"
+                                        title={`${animeData?.name} EP ${episodeNumber?.number}`}
                                         src={videoUrl}
-                                        load='play'
-                                        aspectRatio="16/9"
+                                        crossOrigin
+                                        load='eager'
                                         onTimeUpdate={handleVideoProgress}
                                         onPlay={handlePlay}
                                         playsInline
-                                        clickToPlay={true}
                                     >
                                         <MediaProvider />
                                         {episode?.tracks?.map((trackData, index) => (
@@ -247,10 +250,9 @@ export default function Watch() {
                                                 default={trackData.label === 'English' || trackData.label === 'english'}
                                             />
                                         ))}
-                                        <PlyrLayout 
-                                            invertTime={false}
-                                            markers={markers}
-                                            icons={plyrLayoutIcons}
+                                        <DefaultAudioLayout icons={defaultLayoutIcons} />
+                                        <DefaultVideoLayout
+                                            icons={defaultLayoutIcons}
                                         />
                                     </MediaPlayer>
                                 ) : (

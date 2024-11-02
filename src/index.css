@@ -72,12 +72,17 @@ button {
   cursor: pointer;
   transition: border-color 0.25s;
 }
-button:hover {
-  border-color: #646cff;
+/* button:hover {
+  border-color: none;
+  background-color: gray;
 }
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
+} */
+
+button:hover {
+  background-color: theme('colors.customBlue') !important;
 }
 
 @media (prefers-color-scheme: light) {
@@ -148,16 +153,8 @@ button:focus-visible {
     --chart-5: 340 75% 55%;
   }
 }
-
-@layer base {
-  * {
-    @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
-}
-
-.plyr .plyr__slider {
-  color:#747bff ; /* Change this to your desired highlight color add !important to enable */
+.vjs-quality-select .vjs-icon-placeholder:before {
+  content: '\f10d'; /* You can use any icon from the Video.js icon set */
+  font-family: VideoJS;
+  background-color: #646cff !important;
 }

@@ -29,6 +29,7 @@
     "hls.js": "^1.5.17",
     "lottie-react": "^2.4.0",
     "lucide-react": "^0.447.0",
+    "media-icons": "^1.1.5",
     "node-sass": "^9.0.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -38,7 +39,8 @@
     "styled-components": "^6.1.13",
     "swiper": "^11.1.14",
     "tailwind-merge": "^2.5.3",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "vidstack": "^0.6.15"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.0",

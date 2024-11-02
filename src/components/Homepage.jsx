@@ -6,6 +6,7 @@ import TrendingView from './Popular-carousel/TrendingView';
 import Loader from './screens/Loader';
 import ScheduleComponent from './Schedule/Schedule';
 import ContinueWatching from './ContinueWatching/ContinueWatching';
+import SelectGenre from './Genres/SelectGenre';
 
 export default function Homepage() {
     const { popularAnime, trendingAnime } = useGlobalContext();
@@ -32,7 +33,10 @@ export default function Homepage() {
                     <>
                         <Card anime={popularAnime} className="popular-card" />
                         <TrendingView anime={trendingAnime} />
-                        <ScheduleComponent/>
+                        <div className='flex flex-col lg:flex-row sm:flex-col'>
+                            <ScheduleComponent className='w-full lg:w-1/2' />
+                            <SelectGenre className='w-full lg:w-1/2' />
+                        </div>
                         <ContinueWatching/>
                     </>
                 )}

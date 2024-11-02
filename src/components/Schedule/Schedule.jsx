@@ -65,10 +65,10 @@ const ScheduleComponent = () => {
     const todayIndex = dates.findIndex(date => isSameDay(date, new Date()));
 
     return (
-        <div className="w-full  mx-auto p-6 bg-transparent text-white">
+        <div className="lg:w-3/4 p-6 bg-transparent text-white">
             <div className="mb-8">
                 <div className="flex items-center justify-between mb-4">
-                    <h1 className="text-2xl text-pink-300">Estimated Schedule</h1>
+                    <span className="text-3xl text-blue-500 font-medium">Estimated Schedule</span>
                     <div className="flex items-center gap-2 text-gray-300">
                         <Clock className="w-4 h-4" />
                         <span className="text-sm">
@@ -113,7 +113,7 @@ const ScheduleComponent = () => {
                             <button
                                 onClick={() => setSelectedDate(date)}
                                 className={`w-full p-4 rounded-lg transition-colors ${format(date, 'MMM dd') === format(selectedDate, 'MMM dd')
-                                        ? 'bg-pink-200 text-gray-900'
+                                        ? 'bg-blue-200 text-gray-900'
                                         : 'bg-gray-800 hover:bg-gray-700'
                                     }`}
                             >
@@ -134,7 +134,7 @@ const ScheduleComponent = () => {
                     <Link to={`/anime/${item.id}`} key={item.id} className="flex items-center justify-between p-4 bg-gray-800 rounded-lg hover:bg-gray-700 transition-colors">
                         <div className="flex items-center gap-4">
                             <span className="text-gray-400">{item.time}</span>
-                            <span className="font-medium">{item.name}</span>
+                            <span className="font-medium text-blue-400">{item.name}</span>
                         </div>
                         <span className="text-sm text-gray-400">{item.episode}</span>
                     </Link>

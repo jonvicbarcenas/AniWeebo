@@ -1,54 +1,74 @@
-import '@vidstack/react/player/styles/base.css';
-import React, { useEffect, useState, useMemo, useRef, useContext } from 'react';
-import '@vidstack/react/player/styles/plyr/theme.css';
-import { MediaPlayer, MediaProvider, useMediaRemote } from '@vidstack/react';
-import { PlyrLayout, plyrLayoutIcons } from '@vidstack/react/player/layouts/plyr';
-import { Track } from "@vidstack/react";
+// import '../watch-support/player.css'; already imported
+import { useEffect, useRef } from 'react';
 
-const Testjv = () => {
-    const playerRef = useRef(null);
-    const remote = useMediaRemote(playerRef);
-    const [hasPlayed, setHasPlayed] = useState(false);
+import {
+  isHLSProvider,
+  MediaPlayer,
+  MediaProvider,
+  Poster,
+  Track,
+} from '@vidstack/react';
+import {
+  DefaultAudioLayout,
+  defaultLayoutIcons,
+  DefaultVideoLayout,
+} from '@vidstack/react/player/layouts/default';
 
-    function seekTo(timeInSeconds) {
-        if (!hasPlayed && remote && playerRef.current) {
-          remote.seek(timeInSeconds);
-          console.log(`Seeking to ${timeInSeconds} seconds`);
-          setHasPlayed(true);
-        }
-      }
-      
-    function handleTimeUpdate() {
-        seekTo(330);
+
+import textTracks from './tracks';
+
+export default function Testjv() {
+  const player = useRef(null);
+
+  useEffect(() => {
+    // Subscribe to state updates.
+    return player.current.subscribe(({ paused, viewType }) => {
+      // console.log('is paused?', '->', paused);
+      // console.log('is audio view?', '->', viewType === 'audio');
+    });
+  }, []);
+
+  function onProviderChange(provider, nativeEvent) {
+    // We can configure provider's here.
+    if (isHLSProvider(provider)) {
+      provider.config = {};
     }
+  }
 
-    const markers = [
-        { time: 320, label: 'Intro Start' },
-    ];
+  // We can listen for the `can-play` event to be notified when the player is ready.
+  function onCanPlay(detail, nativeEvent) {
+    // ...
+  }
+  return (
+    <>
+      <MediaPlayer
+        className="player"
+        title="Sprite Fight"
+        src="https://files.vidstack.io/sprite-fight/hls/stream.m3u8"
+        crossOrigin
+        playsInline
+        onProviderChange={onProviderChange}
+        onCanPlay={onCanPlay}
+        ref={player}
+      >
+        <MediaProvider>
+          <Poster
+            className="vds-poster"
+            src="https://files.vidstack.io/sprite-fight/poster.webp"
+            alt="Girl walks into campfire with gnomes surrounding her friend ready for their next meal!"
+          />
+          {textTracks.map((track) => (
+            <Track {...track} key={track.src} />
+          ))}
+        </MediaProvider>
 
-    return (
-        <>
-            <div>
-                <MediaPlayer
-                    ref={playerRef}
-                    title="Sprite Fight"
-                    onTimeUpdate={handleTimeUpdate} 
-                    src="https://mmd.biananset.net/_v7/cd914ffc0cb17d4af1017fa6c1a9cd6d4db33887d1f03f2af365496646f8dfc442c671a686d1b459eb0ffe7b4b795eee172a232f946a2d93b3d5f0873c3137bbf632cfcb0602e96f3ad6ab9187dcb737b5449ba9ef6b2d870c3c4beadc4e0aac13d8d2b165de94c873794b42136609bf22e530c3887d0e336be062f224eb7e29/master.m3u8">
-                    <MediaProvider />
-                    <Track
-                        src="https://s.megastatics.com/subtitle/dc13e106ce815098ee70a00760ea916d/eng-2.vtt"
-                        kind="subtitles"
-                        label="English"
-                        lang="en-US"
-                        default
-                    />
-                    <PlyrLayout 
-                    markers={markers}
-                    thumbnails="https://s.megastatics.com/subtitle/dc13e106ce815098ee70a00760ea916d/eng-2.vtt" icons={plyrLayoutIcons} />
-                </MediaPlayer>
-            </div>
-        </>
-    );
-};
-
-export default Testjv;
+        {/* Layouts */}
+        <DefaultAudioLayout icons={defaultLayoutIcons} />
+        <DefaultVideoLayout
+          icons={defaultLayoutIcons}
+          thumbnails="https://files.vidstack.io/sprite-fight/thumbnails.vtt"
+        />
+      </MediaPlayer>
+    </>
+  );
+}
