@@ -14,7 +14,15 @@
   --video-focus-ring-color: var(--focus-color);
   --video-border-radius: 2px;
 
+  --video-controls-color: #f5f5f5;
+  --video-controls-bg: #f5f5f5;
+
+
   /* 👉 https://vidstack.io/docs/player/components/layouts/default#css-variables for more. */
+}
+
+button {
+  background-color: transparent;
 }
 
 .player[data-view-type='audio'] .vds-poster {
@@ -22,8 +30,10 @@
 }
 
 .player[data-view-type='video'] {
-  aspect-ratio: 16 /9;
+  width: 100%;
+  height: auto;
 }
+
 
 .src-buttons {
   display: flex;

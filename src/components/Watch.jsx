@@ -234,6 +234,7 @@ export default function Watch() {
                                         title={`${animeData?.name} EP ${episodeNumber?.number}`}
                                         src={videoUrl}
                                         crossOrigin
+                                        aspectRatio="16/9"
                                         load='eager'
                                         onTimeUpdate={handleVideoProgress}
                                         onPlay={handlePlay}
