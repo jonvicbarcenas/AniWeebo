@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo, useRef, useContext } from 'react';
+import React, { useEffect, useState, useMemo, useRef, useContext, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { Play, SkipForward, Maximize2, VolumeX, Volume2 } from 'lucide-react';
 import Anilist from './watch-support/Anilist';
@@ -70,14 +70,13 @@ export default function Watch() {
     // console.log('Payload:', payload);
     // console.log('epsiode num:', episodeNumber.number);
 
-    const getEpisodeNumber = async (animeId) => {
+    const getEpisodeNumber = useCallback(async (animeId) => {
         const response = await fetch(`${baseUrl}/hianime/anime/${animeId}/episodes`);
         const res = await response.json();
         const data = res.data.episodes;
         const episode = data.find(episode => episode.episodeId === fullEpisodeId);
         setEpisodeNumber(episode);
-
-    }
+    }, [fullEpisodeId]);
 
     async function updateWatchedEpisode(payload) {
         try {
@@ -90,19 +89,16 @@ export default function Watch() {
         }
     }
 
-    const getAnimeData = async (episodeId) => {
+    const getAnimeData = useCallback(async (episodeId) => {
         try {
             const response = await fetch(`${baseUrl}/hianime/anime/${episodeId}`);
             if (!response.ok) throw new Error('Failed to fetch data');
             const result = await response.json();
-
-            // Set animeData directly to result.data
             setAnimeData(result.data?.anime?.info);
-
         } catch (error) {
             console.error('Error fetching episode data:', error);
         }
-    };
+    }, []);
 
 
     useEffect(() => {
@@ -110,52 +106,52 @@ export default function Watch() {
             setAutoskip(config.autoskip);
             setAutoplay(config.autoplay);
         }
-    }, [config]);//config
+    }, [config]);
 
     useEffect(() => {
         if (episode && Object.keys(episode).length > 0) {
             setLoading(false);
-
-            // Log the episode details related to the intro
-            // console.log('Intro start:', episode?.intro?.start);
-            // console.log('Intro end:', episode?.intro?.end);
         }
     }, [episode, episodeId, episodeParam, watchedTime]);//episode, episodeId, episodeParam, watchedTime
 
-    useEffect(() => {
-        if (episodeParam) getAnimeData(episodeId);
-        getEpisodeNumber(episodeId);
-    }, [episodeParam, episodeId]);
+    // useEffect(() => {
+    //     if (episode && Object.keys(episode).length > 0) {
+    //         setLoading(false);
+    //     }
+    // }, [episode, episodeId, episodeParam, watchedTime]);//episode, episodeId, episodeParam, watchedTime
 
-    const getEpisodes = async (fullEpisodeId) => {
+    useEffect(() => {
+        if (episodeParam && !animeData) getAnimeData(episodeId);
+        getEpisodeNumber(episodeId);
+    }, [episodeParam, episodeId, animeData]);
+
+    const getEpisodes = useCallback(async (fullEpisodeId) => {
         try {
             const response = await fetch(`${baseUrl}/hianime/episode/sources?animeEpisodeId=${fullEpisodeId}`);
             if (!response.ok) throw new Error('Failed to fetch data');
             const result = await response.json();
             const data = result.data;
-            //  console.log('API response data:', data); // Debugging line
-            if (data.sources && data.sources.length > 0)
+            if (data.sources && data.sources.length > 0) {
                 setVideoUrl(data.sources[0].url);
-            const englishTrack = data.tracks.find(track => track.label === 'English' && track.kind === 'captions');
+            }
             setEpisode(data);
         } catch (error) {
             console.error('Error fetching episode data:', error);
         }
-    };
+    }, []);
 
     useEffect(() => {
-        if (episodeParam) getEpisodes(fullEpisodeId);
-    }, [fullEpisodeId, episodeParam]);
+        if (episodeParam && !episode) getEpisodes(fullEpisodeId);
+    }, [fullEpisodeId, episodeParam, episode]);
 
     const lastUpdateTimeRef = useRef(0);
-    const handleVideoProgress = (event) => {
+    const handleVideoProgress = useCallback((event) => {
         const currentTime = event?.currentTime;
         const introStart = episode?.intro?.start || 0;
         const introEnd = episode?.intro?.end || 0;
 
         if (autoskip && currentTime >= introStart && currentTime <= introEnd) {
             remote.seek(introEnd);
-            console.log('Skipping intro to:', introEnd);
         }
 
         if (currentTime - lastUpdateTimeRef.current >= 5) {
@@ -166,24 +162,14 @@ export default function Watch() {
                 updateWatchedEpisode(payload, currentTime);
             }
         }
-    };
+    }, [episode, autoskip, remote, payload]);
 
 
     const toggleMute = () => {
         setIsMuted(!isMuted);
     };
 
-    const toggleAutoskip = () => {
-        const newAutoskipValue = !autoskip;
-        setAutoskip(newAutoskipValue);
-        axios.put(`${axios.defaults.serverURL}/auth/profile`, {
-            config: {
-                autoskip: newAutoskipValue.toString(),
-            }
-        });
-    };
-
-    const toggleAutoplay = () => {
+    const toggleAutoplay = useCallback(() => {
         const newAutoplayValue = !autoplay;
         setAutoplay(newAutoplayValue);
         axios.put(`${axios.defaults.serverURL}/auth/profile`, {
@@ -191,41 +177,47 @@ export default function Watch() {
                 autoplay: newAutoplayValue.toString(),
             }
         });
-    };
-
-    const [hasPlayed, setHasPlayed] = useState(false);
-    const handlePlay = () => {
-        if (!hasPlayed) {
-            // console.log('episodeId:', episodeId);
-            // console.log('episodeParam:', episodeParam);
-
-            const watchedAnime = watchedTime?.find(ep => ep.id === episodeId);
-
-            // console.log('watchedAnime:', watchedAnime);
-
-            const watchedEpisode = watchedAnime?.episodes?.find(ep => ep.episodeId === episodeParam);
-            // console.log('watchedEpisode:', watchedEpisode);
-
-            if (watchedEpisode) {
-                console.log(`Seeking to time: ${watchedEpisode.time}`);
-                remote.seek(watchedEpisode.time, 'seconds');
-            } else {
-                console.log('No matching watched episode found', watchedTime);
+    }, [autoplay]);
+    
+    const toggleAutoskip = useCallback(() => {
+        const newAutoskipValue = !autoskip;
+        setAutoskip(newAutoskipValue);
+        axios.put(`${axios.defaults.serverURL}/auth/profile`, {
+            config: {
+                autoskip: newAutoskipValue.toString(),
             }
+        });
+    }, [autoskip]);
 
-            setHasPlayed(true);
+    const [hasPlayed, setHasPlayed] = useState(2);
+    const handlePlay = useCallback(() => {
+        if (hasPlayed !== 0) {
+            const watchedAnime = watchedTime?.find(ep => ep.id === episodeId);
+            const watchedEpisode = watchedAnime?.episodes?.find(ep => ep.episodeId === episodeParam);
+            // console.log('Watched Episode:', watchedEpisode);
+            console.log('Prog', progress, (progress+5));
+            if (watchedEpisode != undefined) {
+                console.log(`Seeking to time: ${watchedEpisode.time}`);
+                new Promise((resolve, reject) => {
+                    try {
+                        remote.seek(watchedEpisode.time, 'seconds');
+                        resolve();
+                    } catch (error) {
+                        reject(error);
+                    }
+                }).then(() => {
+                    setHasPlayed(hasPlayed - 1);
+                    if((progress+6) > watchedEpisode.time){
+                        setHasPlayed(0);
+                    }
+                }).catch(error => {
+                    console.error('Error seeking:', error);
+                });
+            }
         }
-    };
+    }, [hasPlayed, watchedTime, episodeId, episodeParam]);
 
-    // console.log('subs:', episode?.tracks);
-
-    const introStart = episode?.intro?.start || 0;
-    const introEnd = episode?.intro?.end || 0;
-    const markers = [
-        { time: introStart, label: 'Intro Start' },
-        { time: introEnd, label: 'Intro End' }
-    ];
-
+ 
     return (
         <div className="pt-8 min-h-screen text-gray-100">
             {loading ? (
@@ -247,8 +239,9 @@ export default function Watch() {
                                         src={videoUrl}
                                         crossOrigin
                                         aspectRatio="16/9"
-                                        load='visible'
-                                        onTimeUpdate={handleVideoProgress}
+                                        load='eager'
+                                        preload='auto'
+                                        onTimeUpdate={handleVideoProgress} 
                                         onPlay={handlePlay}
                                         playsInline
                                         autoPlay={autoplay}
@@ -295,7 +288,7 @@ export default function Watch() {
                                     ))}
                                 </div>
                                 <div className="flex flex-wrap gap-2">
-                                    {["Light On", "Auto Next On"].map((text, index) => (
+                                    {["Auto Next On"].map((text, index) => (
                                         <button
                                             key={index}
                                             className="bg-gray-800 hover:bg-gray-700 px-3 py-1 rounded-full text-sm transition-colors duration-200"
@@ -310,7 +303,7 @@ export default function Watch() {
                                             } transition-colors duration-200`}
                                         onClick={toggleAutoplay}
                                     >
-                                        {autoskip ? "Auto Play On" : "Auto Play Off"}
+                                        {autoplay ? "Auto Play On" : "Auto Play Off"}
                                     </button>
                                     <button
                                         className={`px-3 py-1 rounded-full text-sm border ${autoskip

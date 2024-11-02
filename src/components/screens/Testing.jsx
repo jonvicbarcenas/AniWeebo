@@ -47,6 +47,7 @@ export default function Testjv() {
         src="https://files.vidstack.io/sprite-fight/hls/stream.m3u8"
         crossOrigin
         playsInline
+        autoplay={true}
         onProviderChange={onProviderChange}
         onCanPlay={onCanPlay}
         ref={player}
