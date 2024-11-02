@@ -34,6 +34,7 @@ export default function Watch() {
     //* Autoskip & User Config
     const { config, watchedTime } = useContext(AuthContext);
     const [autoskip, setAutoskip] = useState(null);
+    const [autoplay, setAutoplay] = useState(false);
     const [animeData, setAnimeData] = useState(null);
     const [episodeNumber, setEpisodeNumber] = useState();
 
@@ -78,12 +79,12 @@ export default function Watch() {
 
     }
 
-    async function updateWatchedEpisode(payload, progress) {
+    async function updateWatchedEpisode(payload) {
         try {
             await new Promise(resolve => setTimeout(resolve, 1500)); // Delay for 1.5 seconds
             const response = await axios.post(`${axios.defaults.serverURL}/auth/profile/watched`, payload);
 
-            console.log('Episode updated successfully:', response.data);
+            // console.log('Episode updated successfully:', response.data);
         } catch (error) {
             console.error('Error updating episode:', error);
         }
@@ -107,6 +108,7 @@ export default function Watch() {
     useEffect(() => {
         if (config) {
             setAutoskip(config.autoskip);
+            setAutoplay(config.autoplay);
         }
     }, [config]);//config
 
@@ -181,6 +183,16 @@ export default function Watch() {
         });
     };
 
+    const toggleAutoplay = () => {
+        const newAutoplayValue = !autoplay;
+        setAutoplay(newAutoplayValue);
+        axios.put(`${axios.defaults.serverURL}/auth/profile`, {
+            config: {
+                autoplay: newAutoplayValue.toString(),
+            }
+        });
+    };
+
     const [hasPlayed, setHasPlayed] = useState(false);
     const handlePlay = () => {
         if (!hasPlayed) {
@@ -235,10 +247,11 @@ export default function Watch() {
                                         src={videoUrl}
                                         crossOrigin
                                         aspectRatio="16/9"
-                                        load='eager'
+                                        load='visible'
                                         onTimeUpdate={handleVideoProgress}
                                         onPlay={handlePlay}
                                         playsInline
+                                        autoPlay={autoplay}
                                     >
                                         <MediaProvider />
                                         {episode?.tracks?.map((trackData, index) => (
@@ -282,7 +295,7 @@ export default function Watch() {
                                     ))}
                                 </div>
                                 <div className="flex flex-wrap gap-2">
-                                    {["Light On", "Auto Play Off", "Auto Next On"].map((text, index) => (
+                                    {["Light On", "Auto Next On"].map((text, index) => (
                                         <button
                                             key={index}
                                             className="bg-gray-800 hover:bg-gray-700 px-3 py-1 rounded-full text-sm transition-colors duration-200"
@@ -290,6 +303,15 @@ export default function Watch() {
                                             {text}
                                         </button>
                                     ))}
+                                    <button
+                                        className={`px-3 py-1 rounded-full text-sm border ${autoplay
+                                            ? "border-green-500 text-green-500 hover:bg-red-500 hover:text-gray-900"
+                                            : "border-gray-500 text-gray-500 hover:bg-green-500 hover:text-gray-900"
+                                            } transition-colors duration-200`}
+                                        onClick={toggleAutoplay}
+                                    >
+                                        {autoskip ? "Auto Play On" : "Auto Play Off"}
+                                    </button>
                                     <button
                                         className={`px-3 py-1 rounded-full text-sm border ${autoskip
                                             ? "border-green-500 text-green-500 hover:bg-green-500 hover:text-gray-900"

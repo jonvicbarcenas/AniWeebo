@@ -67,9 +67,9 @@ const ContinueWatching = () => {
                       <span className="bg-blue-600 px-2 py-0.5 rounded text-xs">
                         SUB:{anime.stats.cc.sub}
                       </span>
-                      {anime.stats.cc.dub && (
+                      {anime.stats.cc.dub !== null && (
                         <span className="bg-pink-100 px-2 py-0.5 rounded text-xs text-black">
-                          DUB: {anime.stats.cc.dub}
+                          DUB: {anime.stats.cc.dub || 'N/A'}
                         </span>
                       )}
                       <span>{anime.stats.rating}</span>
