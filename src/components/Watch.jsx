@@ -250,6 +250,12 @@ export default function Watch() {
                                                 default={trackData.label === 'English' || trackData.label === 'english'}
                                             />
                                         ))}
+                                        <Track
+                                            src={`${axios.defaults.serverURL}/vtt/anime?animeEpisodeId=${episodeId}&ep=${episodeParam}`}
+                                            kind="chapters"
+                                            lang="en-US"
+                                            default={true}
+                                        />
                                         <DefaultAudioLayout icons={defaultLayoutIcons} />
                                         <DefaultVideoLayout
                                             icons={defaultLayoutIcons}
