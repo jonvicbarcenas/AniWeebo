@@ -4,13 +4,14 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { useNavigate } from 'react-router-dom'
 import { useToast } from '../../context/ToastContext'
+import axios from 'axios';
 
 export default function LoginForm() {
   const navigate = useNavigate();
   const { showToast } = useToast();
 
   const handleGoogleLogin = async () => {
-    window.location.href = "http://localhost:5000/auth/google";
+    window.location.href = `${axios.defaults.serverURL}/auth/google`;
   };
 
   return (
