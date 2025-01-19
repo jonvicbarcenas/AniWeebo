@@ -11,6 +11,7 @@ const GET_POPULAR_ANIME = "GET_POPULAR_ANIME";
 const GET_TRENDING_ANIME = "GET_TRENDING_ANIME";
 const GET_UPCOMING_ANIME = "GET_UPCOMING_ANIME";
 const GET_AIRING_ANIME = "GET_AIRING_ANIME";
+const GET_GENRES_ANIME = "GET_GENRES_ANIME"
 
 // reducer
 const reducer = (state, action) => {
@@ -25,6 +26,8 @@ const reducer = (state, action) => {
             return {...state, upcomingAnime: action.payload, loading: false}
         case GET_AIRING_ANIME:
             return {...state, airingAnime: action.payload, loading: false}
+        case GET_GENRES_ANIME:
+            return {...state, genreAnime: action.payload, loading: false}
         case SEARCH:
             return {...state, searchResults: action.payload, isSearch: true}
         default:
@@ -41,6 +44,7 @@ export const GlobalContextProvider = ({children}) => {
         trendingAnime: [],
         upcomingAnime: [],
         airingAnime: [],
+        genreAnime: [],
         pictures: [],  
         isSearch: false,
         searchResults: [],
@@ -93,7 +97,7 @@ export const GlobalContextProvider = ({children}) => {
             const result = await response.json();
             const data = result.data; // Extract the data object
             dispatch({type: GET_TRENDING_ANIME, payload: data.trendingAnimes});
-        } 
+        }
           
 
 
