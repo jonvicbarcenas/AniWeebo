@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import { API_BASE_URL } from '../../lib/config';
 
-const baseUrl = 'https://jvbarcenas.tech/api/v2/hianime';
+const baseUrl = `${API_BASE_URL}/api/v2/hianime`;
 
-function Anilist({ episodeId, fullEpisodeId }) {
+const Anilist = ({ episodeId, fullEpisodeId }) => {
   const { episodeId: currentEpisodeId } = useParams(); // Get current episodeId from the URL
   const [episodes, setEpisodes] = useState([]);
 

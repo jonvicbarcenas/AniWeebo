@@ -1,8 +1,9 @@
 import React, { createContext, useContext, useEffect, useReducer, useState} from 'react'
+import { API_BASE_URL } from '../lib/config';
 
 const GlobalContext = createContext();
 
-const baseUrl = 'https://jvbarcenas.tech/api/v2'
+const baseUrl = `${API_BASE_URL}/api/v2`;
 
 //actions
 const LOADING = "LOADING";

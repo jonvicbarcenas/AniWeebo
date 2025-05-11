@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import '../Watch.css'
+import '../Watch.css';
 import { Link } from 'react-router-dom';
+import { API_BASE_URL } from '../lib/config';
+import { ScrollArea } from '../ui/scroll-area';
 
-const baseUrl = 'https://jvbarcenas.tech/api';
+const baseUrl = `${API_BASE_URL}/api`;
 
-function SelectedAnimeDesc({episodeId}) {
+function SelectedAnimeDesc({ episodeId }) {
     //state
     const [anime, setAnime] = useState({}); //anime
     const [showMore, setShowMore] = useState(false); //showMore
@@ -49,4 +51,4 @@ function SelectedAnimeDesc({episodeId}) {
   )
 }
 
-export default SelectedAnimeDesc
+export default SelectedAnimeDesc;

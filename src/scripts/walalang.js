@@ -1,3 +1,4 @@
+// filepath: c:\Users\USER\OneDrive\Desktop\JV-Hobbies\aniWEB\FINAL\JVWEB\src\scripts\walalang.js
 // index.js
 
 import express from 'express';
@@ -12,4 +13,3 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
-

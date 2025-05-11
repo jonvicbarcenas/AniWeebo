@@ -5,10 +5,10 @@ import { Clock } from 'lucide-react';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import { format, addDays, startOfMonth, endOfMonth, isSameDay } from 'date-fns';
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
+import { API_BASE_URL } from '../../lib/config';
 
-
-const baseUrl = 'https://jvbarcenas.tech/api/v2/hianime';
+const baseUrl = `${API_BASE_URL}/api/v2/hianime`;
 
 const ScheduleComponent = () => {
     const [selectedDate, setSelectedDate] = useState(new Date());

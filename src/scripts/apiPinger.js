@@ -1,7 +1,8 @@
+// filepath: c:\Users\USER\OneDrive\Desktop\JV-Hobbies\aniWEB\FINAL\JVWEB\src\scripts\apiPinger.js
 import axios from 'axios';
 
 // URL of the website to ping
-const url = 'https://jvbarcenas.tech/';
+const url = 'https://app.jombikbarcenas.site/';
 
 // Ping the website every 15 minutes (15 * 60 * 1000 milliseconds)
 const interval = 15 * 60 * 1000;
@@ -30,4 +31,3 @@ const pingWebsite = async () => {
 // Ping immediately and then at regular intervals
 pingWebsite();
 setInterval(pingWebsite, interval);
-

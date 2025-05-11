@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import { API_BASE_URL } from '../../lib/config';
 
-const baseUrl = 'https://jvbarcenas.tech/api/v2/hianime';
+const baseUrl = `${API_BASE_URL}/api/v2/hianime`;
 
 export default function AniDescription({ episodeId }) {
   const [anime, setAnime] = useState({});
@@ -37,7 +38,7 @@ export default function AniDescription({ episodeId }) {
             {anime.description}
           </p>
           <p className="text-sm leading-relaxed">
-              jvbarcenas tech is awesome to watch <span className="text-purple-300">{anime.name}</span> anime!!! 
+              jvbarcenas tech is awesome to watch <span className="text-purple-300">{anime.name}</span> anime!!! Dainsleif.
           </p>
         </div>
       </div>

@@ -7,9 +7,9 @@ import { cn } from "@/lib/utils";
 const SparklesText = ({
   text,
   colors = { first: "#9E7AFF", second: "#FE8BBB" },
-  className,
+  className, // This is the className from AnimeItem, intended for text styling
   sparklesCount = 10,
-  ...props
+  ...props // Other props for the root div element like id, etc.
 }) => {
   const [sparkles, setSparkles] = useState([]);
 
@@ -45,25 +45,29 @@ const SparklesText = ({
     const interval = setInterval(updateStars, 100);
 
     return () => clearInterval(interval);
-  }, [colors.first, colors.second]);
+  }, [colors.first, colors.second, sparklesCount]); // Added sparklesCount to dependency array if it affects star generation
 
   return (
-    (<div
-      className={cn("text-6xl font-bold", className)}
+    <div
+      // Apply any className from ...props to the root div.
+      // Retain default font styling here, which can be overridden by the `className` on the span.
+      className={cn("text-6xl font-bold", props.className)}
       {...props}
       style={
         {
           "--sparkles-first-color": `${colors.first}`,
           "--sparkles-second-color": `${colors.second}`
         }
-      }>
-      <span className="relative inline-block">
+      }
+    >
+      {/* Apply the main styling 'className' prop (from AnimeItem) to this span */}
+      <span className={cn("relative inline-block", className)}>
         {sparkles.map((sparkle) => (
           <Sparkle key={sparkle.id} {...sparkle} />
         ))}
         <strong>{text}</strong>
       </span>
-    </div>)
+    </div>
   );
 };
 

@@ -6,6 +6,7 @@ import Loader from './screens/Loader';
 import AuthContext from '../context/authContext';
 import axios from "axios";
 import AniDescription from './watch-support/anidescription';
+import { API_BASE_URL } from '../lib/config';
 
 //* vidstack like plyr
 import { MediaPlayer, MediaProvider, useMediaRemote, Track } from '@vidstack/react';
@@ -16,7 +17,7 @@ import {
 } from '@vidstack/react/player/layouts/default';
 import './watch-support/player.css';
 
-const baseUrl = 'https://jvbarcenas.tech/api/v2';
+const baseUrl = `${API_BASE_URL}/api/v2`;
 
 export default function Watch() {
     const { episodeId } = useParams();
@@ -127,12 +128,14 @@ export default function Watch() {
 
     const getEpisodes = useCallback(async (fullEpisodeId) => {
         try {
-            const response = await fetch(`${baseUrl}/hianime/episode/sources?animeEpisodeId=${fullEpisodeId}`);
+            const response = await fetch(`https://gogoanime-and-hianime-proxy.vercel.app/m3u8-proxy?url=${baseUrl}/hianime/episode/sources?animeEpisodeId=${fullEpisodeId}?server=hd-2`);
             if (!response.ok) throw new Error('Failed to fetch data');
             const result = await response.json();
             const data = result.data;
             if (data.sources && data.sources.length > 0) {
-                setVideoUrl(data.sources[0].url);
+                // Ensure the M3U8 URL itself is also proxied
+                const m3u8Url = data.sources[0].url;
+                setVideoUrl(`https://gogoanime-and-hianime-proxy.vercel.app/m3u8-proxy?url=${m3u8Url}`);
             }
             setEpisode(data);
         } catch (error) {
